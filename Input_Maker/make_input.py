@@ -234,7 +234,6 @@ class Input_Maker():
             self.__write_active_space()
             
             self.__input_file.write("*ORBITAL INPUT"+"\n")
-            self.__input_file.write(".NOSUPSYM"+"\n")
             self.__input_file.write(".MOSTART"+"\n")
             self.__input_file.write(" NEWORB"+"\n")
             
@@ -248,7 +247,6 @@ class Input_Maker():
             self.__input_file.write(".MAX MACRO ITERATIONS\n")
             self.__input_file.write(" "+str(self.max_macro)+"\n")
             self.__input_file.write("**INTEGRALS\n")
-            self.__input_file.write(".NOSUP\n")
             self.__input_file.write("*TWOINT\n")
             self.__input_file.write(".DOSRIN\n")
             self.__input_file.write(".ERF\n")
