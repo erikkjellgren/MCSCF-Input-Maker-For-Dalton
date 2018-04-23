@@ -35,27 +35,29 @@ def print_natural_occ(natural_occupations, threshold, neglect_threshold):
             print("")
             print("")
         print("Symmetry: ", key)
-        A1 = np.resize(natural_occupations[key][(natural_occupations[key]>neglect_threshold) & (natural_occupations[key]<2-neglect_threshold)], ((len(natural_occupations[key][(natural_occupations[key]>neglect_threshold) & (natural_occupations[key]<2-neglect_threshold)])+1)//5,5))
+        orbitals = np.resize(natural_occupations[key][(natural_occupations[key]>neglect_threshold) & (natural_occupations[key]<2-neglect_threshold)], ((len(natural_occupations[key][(natural_occupations[key]>neglect_threshold) & (natural_occupations[key]<2-neglect_threshold)])+1)//5,5))
+        latest = 2
+        for i in range(len(orbitals)):
+            for j in range(len(orbitals[0])):
+                if orbitals[i,j] > latest:
+                    orbitals[i,j] = np.nan
+                else:
+                    latest = orbitals[i,j]
+
         counter = 0
-        for i in range(len(A1)):
-            for j in range(len(A1[0])):
-                counter += 1
-                if counter > len(natural_occupations[key]):
-                    A1[i,j] = np.nan
-        counter = 0
-        for i in range(len(A1)):
+        for i in range(len(orbitals)):
             print("")
-            for j in range(len(A1[0])):
-                if 2 - A1[i,j] > threshold and A1[i,j] > 0.5:
+            for j in range(len(orbitals[0])):
+                if 2 - orbitals[i,j] > threshold and orbitals[i,j] > 0.5:
                     counter += 1
-                    print('\033[4m' + "{0:.4f}".format(A1[i,j])+ '\033[0m',end="")
+                    print('\033[4m' + "{0:.4f}".format(orbitals[i,j])+ '\033[0m',end="")
                     print("   ", end="")
-                elif A1[i,j] < 0.5 and counter != 0:
-                    print('\033[4m' + "{0:.4f}".format(A1[i,j])+ '\033[0m',end="")
+                elif orbitals[i,j] < 0.5 and counter != 0:
+                    print('\033[4m' + "{0:.4f}".format(orbitals[i,j])+ '\033[0m',end="")
                     print("   ", end="")
                     counter -= 1
                 else:
-                    if np.isnan(A1[i,j]):
+                    if np.isnan(orbitals[i,j]):
                         print("         ",end="")
                     else:
-                        print("{0:.4f}   ".format(A1[i,j]),end="")
+                        print("{0:.4f}   ".format(orbitals[i,j]),end="")

@@ -4,6 +4,4 @@
 input.dal
 .coverage
 
-data/from_CI_RAS.inp
-data/from_CI_RAS2.inp
-data/from_mp2_RAS.inp
+data/from_*.inp
