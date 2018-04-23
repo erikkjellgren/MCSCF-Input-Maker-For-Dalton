@@ -8,12 +8,19 @@ def threshold_scan_all(natural_occupations):
         all_orbital = np.concatenate((all_orbital, natural_occupations[key]))
     all_orbitals = np.sort(all_orbital)
     orbital_counter = 1
+    latests_threshold = 0
+    print("Threshold    Occ-active orb.    Change in threshold")
     for i in all_orbitals:
-        if i != 2.0 and i > 1.4:
-            print("Threshold: {0:.4f} gives: {1:2d} occupied-active orbitals".format(2-i, orbital_counter))
+        if i != 2.0 and i > 1.4 and latests_threshold != 0:
+            print("  {0:.3f}            {1:2d}                 {2:.3f}".format(2-i, orbital_counter, latests_threshold - (2-i)))
+            latests_threshold = 2-i
             orbital_counter += 1
             if orbital_counter == 17:
                 break
+        elif i != 2.0 and i > 1.4:
+            print("  {0:.3f}            {1:2d}".format(2-i, orbital_counter))
+            latests_threshold = 2-i
+            orbital_counter += 1
     
     
 def threshold_scan_symmetries(natural_occupations):
