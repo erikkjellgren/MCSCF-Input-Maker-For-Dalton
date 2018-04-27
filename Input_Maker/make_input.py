@@ -50,8 +50,8 @@ class Input_Maker():
         self.max_micro = 24
         self.max_macro = 24
         # MCSCFsrDFT stuff
-        self.srxfunctional = "SRXPBEHSE"
-        self.srcfunctional = "SRCPBERI"
+        self.srxfunctional = "SRXPBEGWS"
+        self.srcfunctional = "SRCPBEGWS"
         self.range_separation_parameter = 0.4
         
         """Some internal variables"""

@@ -42,14 +42,14 @@ def print_natural_occ(natural_occupations, threshold, neglect_threshold):
             print("")
             print("")
         print("Symmetry: ", key)
-        orbitals = np.resize(natural_occupations[key][(natural_occupations[key]>neglect_threshold) & (natural_occupations[key]<2-neglect_threshold)], ((len(natural_occupations[key][(natural_occupations[key]>neglect_threshold) & (natural_occupations[key]<2-neglect_threshold)])+1)//5,5))
-        latest = 2
+        orbitals = np.resize(natural_occupations[key][(natural_occupations[key]>neglect_threshold) & (natural_occupations[key]<2-neglect_threshold)], ((len(natural_occupations[key][(natural_occupations[key]>neglect_threshold) & (natural_occupations[key]<2-neglect_threshold)])+4)//5,5))
+        latest_orbital = 2
         for i in range(len(orbitals)):
             for j in range(len(orbitals[0])):
-                if orbitals[i,j] > latest:
+                if orbitals[i,j] > latest_orbital:
                     orbitals[i,j] = np.nan
                 else:
-                    latest = orbitals[i,j]
+                    latest_orbital = orbitals[i,j]
 
         counter = 0
         for i in range(len(orbitals)):
