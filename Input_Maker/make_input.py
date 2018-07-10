@@ -75,7 +75,18 @@ class Input_Maker():
         anal.threshold_scan_symmetries(self.natural_occupations)
     
 
-    def get_natural_occupancies(self, threshold=1.9):
+    def get_natural_occupancies(self, threshold=2.0):
+        """
+        Prints the natural occupancies in a formatted manner.
+        
+        input : threshold, to specif which occupation numbers that should be underlined.
+                   will specify with respect to 2. Same number of occupied and 
+                   unoccupied will be underlined in each symmetry.
+                   default=2.0. I.e. none will be underlined, if 0.0 all will be underlined.
+                   
+        self.get_nat_occ_neglect_threshold, can be set to decrease or increase the 
+        threshold for which occupation numbers will be printed. default=0.001
+        """
         anal.print_natural_occ(self.natural_occupations, threshold, self.get_nat_occ_neglect_threshold)
         
     def __write_active_space(self):

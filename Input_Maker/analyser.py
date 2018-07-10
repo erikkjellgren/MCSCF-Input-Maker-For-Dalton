@@ -37,34 +37,38 @@ def threshold_scan_symmetries(natural_occupations):
 
 
 def print_natural_occ(natural_occupations, threshold, neglect_threshold):
+    """
+    Function to print natural occupations in a formatted way.
+    
+    Input : natural_occupations, dictionary of ordered natural occupations.
+          : threshold, threshold for which occupation numbers will be underlined.
+               Threshold is set for how close to 2, based on this the same number of
+               occupied and unoccupied will be underlined in each symmetry.
+          : neglect_threshold, thershold for which occupation numbers will not be printed
+    """
     for key in natural_occupations:
         if key != 1:
             print("")
             print("")
         print("Symmetry: ", key)
-        orbitals = np.resize(natural_occupations[key][(natural_occupations[key]>neglect_threshold) & (natural_occupations[key]<2-neglect_threshold)], ((len(natural_occupations[key][(natural_occupations[key]>neglect_threshold) & (natural_occupations[key]<2-neglect_threshold)])+4)//5,5))
-        latest_orbital = 2
-        for i in range(len(orbitals)):
-            for j in range(len(orbitals[0])):
-                if orbitals[i,j] > latest_orbital:
-                    orbitals[i,j] = np.nan
-                else:
-                    latest_orbital = orbitals[i,j]
-
         counter = 0
-        for i in range(len(orbitals)):
-            print("")
-            for j in range(len(orbitals[0])):
-                if 2 - orbitals[i,j] > threshold and orbitals[i,j] > 0.5:
-                    counter += 1
-                    print('\033[4m' + "{0:.4f}".format(orbitals[i,j])+ '\033[0m',end="")
-                    print("   ", end="")
-                elif orbitals[i,j] < 0.5 and counter != 0:
-                    print('\033[4m' + "{0:.4f}".format(orbitals[i,j])+ '\033[0m',end="")
-                    print("   ", end="")
-                    counter -= 1
+        orbital_counter = 0
+        for i in range(len(natural_occupations[key])):
+            if natural_occupations[key][i] < neglect_threshold or natural_occupations[key][i] > 2-neglect_threshold:
+                continue
+            if orbital_counter%5 == 0:
+                print("")
+            orbital_counter += 1
+            if 2 - natural_occupations[key][i] > threshold and natural_occupations[key][i] > 0.5:
+                counter += 1
+                print('\033[4m' + "{0:.4f}".format(natural_occupations[key][i])+ '\033[0m',end="")
+                print("   ", end="")
+            elif natural_occupations[key][i] < 0.5 and counter != 0:
+                print('\033[4m' + "{0:.4f}".format(natural_occupations[key][i])+ '\033[0m',end="")
+                print("   ", end="")
+                counter -= 1
+            else:
+                if np.isnan(natural_occupations[key][i]):
+                    print("         ",end="")
                 else:
-                    if np.isnan(orbitals[i,j]):
-                        print("         ",end="")
-                    else:
-                        print("{0:.4f}   ".format(orbitals[i,j]),end="")
+                    print("{0:.4f}   ".format(natural_occupations[key][i]),end="")
