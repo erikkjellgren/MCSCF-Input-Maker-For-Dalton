@@ -62,7 +62,11 @@ def Pick_CAS_number_occupied(number_occ, Natural_Occupations):
         for i in Natural_Occupations[key]:
             if i < 1.1 and i > 0.9:
                 print("WARNING: Cannot determine if orbital is occupied or virtuel, might lead to error in choosing orbitals.")
-            if i > 1.1:
+                if i > 1.0:
+                    print("Occupation: "+str(i)+" chosen as occupied".)
+                else:
+                    print("Occupation: "+str(i)+" chosen as virtuel".)
+            if i > 1.0:
                 inactive[key-1] += 1 # Will subtract picked orbitals later
                 j = np.argmax(picked_occ[:,1])
                 if i < picked_occ[j,1]:  
