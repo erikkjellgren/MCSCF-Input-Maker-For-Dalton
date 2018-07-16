@@ -10,7 +10,7 @@ class Input_Maker():
     #        and: wavefunction_type = wavefunction going into input file
     def __init__(self, output_file):
         """Get numbers from output file"""
-        with open(output_file) as f:
+        with open(output_file, "r", encoding="utf-8") as f:
             self.__load_file = list(f)
             
         self.__type_wavefunction = fload.wavefunction_type_output(self.__load_file)
