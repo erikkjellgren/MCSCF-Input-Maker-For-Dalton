@@ -49,6 +49,7 @@ class Input_Maker():
         self.active_electrons_in_RAS2 = 0
         self.max_micro = 24
         self.max_macro = 24
+        self.symmetry_threshold = 10**-4
         # MCSCFsrDFT stuff
         self.srxfunctional = "SRXPBEGWS"
         self.srcfunctional = "SRCPBEGWS"
@@ -189,7 +190,7 @@ class Input_Maker():
         self.__input_file.write(".RUN WAVE FUNCTION"+"\n")
         self.__input_file.write("*MOLBAS\n")
         self.__input_file.write(".SYMTHR\n")
-        self.__input_file.write(" 1.0D-4\n")
+        self.__input_file.write(" "+str(self.symmetry_threshold)+"\n")
         
         """Write CI"""
         if self.wavefunction_type == "ci":
