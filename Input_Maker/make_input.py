@@ -66,6 +66,8 @@ class Input_Maker():
     def pick_CAS_by_active_threshold(self, threshold):
         self.CAS, self.inactive = heu.Pick_CAS_active_threshold(threshold, self.natural_occupations)
         
+    def pick_CAS_by_number_occupied(self, number_occupied):
+        self.CAS, self.inactive = heu.Pick_CAS_number_occupied(number_occupied, self.natural_occupations)
         
     def scan_threshold_all(self):
         anal.threshold_scan_all(self.natural_occupations)

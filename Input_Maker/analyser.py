@@ -68,7 +68,4 @@ def print_natural_occ(natural_occupations, threshold, neglect_threshold):
                 print("   ", end="")
                 counter -= 1
             else:
-                if np.isnan(natural_occupations[key][i]):
-                    print("         ",end="")
-                else:
-                    print("{0:.4f}   ".format(natural_occupations[key][i]),end="")
+                print("{0:.4f}   ".format(natural_occupations[key][i]),end="")

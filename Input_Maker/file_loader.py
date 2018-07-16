@@ -2,13 +2,19 @@ import numpy as np
 
 
 def wavefunction_type_output(load_file):
+    found_check = 0
     for i in load_file:
         if i[0:23] == "@    Wave function type":
             data = i[24:].split()
             for j in data:
                 if j != '' and j != "---":
                     wavefunction = j.lower()
+                    found_check = 1
                     break
+    if found_check == 0:
+        print("Warning: Wave function type could not be determined. Set to \"Unknown\".")
+        print("This might cause problems if it is a MP2 wave function.")
+        wavefunction = "Unknown"
     return wavefunction
 
 
