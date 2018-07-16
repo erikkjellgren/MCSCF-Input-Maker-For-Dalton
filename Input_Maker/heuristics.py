@@ -62,6 +62,7 @@ def Pick_CAS_number_occupied(number_occ, Natural_Occupations, allow_more_virt=Fa
     # Cannot choose more occupied orbitals than allowed by number of electrons
     number_occ = np.min([number_occ, number_electrons//2])
     if allow_more_virt == False:
+        # Ensure number of virt == number of occ
         number_virt = number_occ
         
     CAS = np.zeros(len(Natural_Occupations), dtype=int)
@@ -134,10 +135,11 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
                 if i < picked_occ[j,1]:
                     picked_occ[j,0] = key
                     picked_occ[j,1] = i
-    for i in picked_occ[:,0]:
-        if i != 2:
-            RAS1[int(i)-1] += 1
-            inactive[int(i)-1] -= 1
+    for i in range(len(picked_occ[:,0])):
+        idx = int(picked_occ[i,0]) - 1
+        if picked_occ[i,1] != 2:
+            RAS1[idx] += 1
+            inactive[idx] -= 1
     for key in Natural_Occupations:
         for i in Natural_Occupations[key]:
             if i < 1.0:
