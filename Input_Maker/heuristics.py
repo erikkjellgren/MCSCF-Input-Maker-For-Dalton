@@ -51,11 +51,17 @@ def Pick_CAS_number_occupied(number_occ, Natural_Occupations):
     The occupied and virtuel is picked in the order, of being most different,
       from 2 or 0 respectively.
     """
+    number_electrons = 0.5
+    for key in Natural_Occupations:
+        number_electrons += np.sum(Natural_Occupations[key])
+    number_electrons = int(number_electrons)
+    # Cannot choose more occupied orbitals than allowed by number of electrons
+    number_occ = np.min([number_occ, number_electrons//2])
     CAS = np.zeros(len(Natural_Occupations), dtype=int)
     inactive = np.zeros(len(Natural_Occupations), dtype=int)
     # array to hold symmetry and occupation numbers of picked orbitals
     picked_occ = np.zeros((number_occ,2))
-    picked_occ[:,:] = 2 # Set to two, all other occupations will be smaller
+    picked_occ[:,:] = 3 # Set to three, all other occupations will be smaller
     picked_virt = np.zeros((number_occ,2))
     inactive = np.zeros(len(Natural_Occupations), dtype=int)
     CAS = np.zeros(len(Natural_Occupations), dtype=int)
@@ -79,8 +85,9 @@ def Pick_CAS_number_occupied(number_occ, Natural_Occupations):
                     picked_virt[j,0] = key
                     picked_virt[j,1] = i
     for i in picked_occ[:,0]:
-        CAS[int(i)-1] += 1
-        inactive[int(i)-1] -= 1
+        if i != 2.0:
+            CAS[int(i)-1] += 1
+            inactive[int(i)-1] -= 1
     for i in picked_virt[:,0]:
         CAS[int(i)-1] += 1
     return CAS, inactive
@@ -91,13 +98,19 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
     Function to pick a RAS-CI active based on number number of 
       occupied orbitals wanted. 
     """
+    number_electrons = 0.5
+    for key in Natural_Occupations:
+        number_electrons += np.sum(Natural_Occupations[key])
+    number_electrons = int(number_electrons)
+    # Cannot choose more occupied orbitals than allowed by number of electrons
+    number_occ = np.min([number_occ, number_electrons//2])
     RAS1 = np.zeros(len(Natural_Occupations), dtype=int)
     RAS2 = np.zeros(len(Natural_Occupations), dtype=int)
     RAS3 = np.zeros(len(Natural_Occupations), dtype=int)
     inactive = np.zeros(len(Natural_Occupations), dtype=int)
     # array to hold symmetry and occupation numbers of picked orbitals
     picked_occ = np.zeros((number_occ,2))
-    picked_occ[:,:] = 2 # Set to two, all other occupations will be smaller
+    picked_occ[:,:] = 3 # Set to three, all other occupations will be smaller
     inactive = np.zeros(len(Natural_Occupations), dtype=int)
     CAS = np.zeros(len(Natural_Occupations), dtype=int)
     for key in Natural_Occupations:
@@ -111,20 +124,23 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
             if i > 1.0:
                 inactive[key-1] += 1 # Will subtract picked orbitals later
                 j = np.argmax(picked_occ[:,1])
-                if i < picked_occ[j,1]:  
+                if i < picked_occ[j,1]:
                     picked_occ[j,0] = key
                     picked_occ[j,1] = i
     for i in picked_occ[:,0]:
-        print(i)
         RAS1[int(i)-1] += 1
         inactive[int(i)-1] -= 1
     for key in Natural_Occupations:
         for i in Natural_Occupations[key]:
             if i < 1.0:
-                if binom(np.sum(RAS1)*2,2)*binom(np.sum(RAS3)*2+2 - np.sum(RAS1)*2,2) < approx_determinant_limt:
-                    RAS3[key-1] += 1
+                if np.sum(RAS3)*2+2 - np.sum(RAS1)*2 > 1:
+                    if binom(np.sum(RAS1)*2,2)*binom(np.sum(RAS3)*2+2 - np.sum(RAS1)*2,2) < approx_determinant_limt:
+                        RAS3[key-1] += 1
+                    else:
+                        break
                 else:
-                    break
+                    RAS3[key-1] += 1
+
     return RAS1, RAS3, inactive
 
 
