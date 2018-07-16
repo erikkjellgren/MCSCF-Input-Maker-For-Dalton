@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.special import binom
 
 
 def Pick_RAS_active_threshold(threshold, Natural_Occupations):
@@ -63,9 +64,9 @@ def Pick_CAS_number_occupied(number_occ, Natural_Occupations):
             if i < 1.1 and i > 0.9:
                 print("WARNING: Cannot determine if orbital is occupied or virtuel, might lead to error in choosing orbitals.")
                 if i > 1.0:
-                    print("Occupation: "+str(i)+" chosen as occupied".)
+                    print("Occupation: "+str(i)+" chosen as occupied.")
                 else:
-                    print("Occupation: "+str(i)+" chosen as virtuel".)
+                    print("Occupation: "+str(i)+" chosen as virtuel.")
             if i > 1.0:
                 inactive[key-1] += 1 # Will subtract picked orbitals later
                 j = np.argmax(picked_occ[:,1])
@@ -83,7 +84,52 @@ def Pick_CAS_number_occupied(number_occ, Natural_Occupations):
     for i in picked_virt[:,0]:
         CAS[int(i)-1] += 1
     return CAS, inactive
-    
+
+
+def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determinant_limt=7*10**6):
+    """
+    Function to pick a RAS-CI active based on number number of 
+      occupied orbitals wanted. 
+    """
+    RAS1 = np.zeros(len(Natural_Occupations), dtype=int)
+    RAS2 = np.zeros(len(Natural_Occupations), dtype=int)
+    RAS3 = np.zeros(len(Natural_Occupations), dtype=int)
+    inactive = np.zeros(len(Natural_Occupations), dtype=int)
+    # array to hold symmetry and occupation numbers of picked orbitals
+    picked_occ = np.zeros((number_occ,2))
+    picked_occ[:,:] = 2 # Set to two, all other occupations will be smaller
+    picked_virt = np.zeros((number_occ,2))
+    inactive = np.zeros(len(Natural_Occupations), dtype=int)
+    CAS = np.zeros(len(Natural_Occupations), dtype=int)
+    for key in Natural_Occupations:
+        for i in Natural_Occupations[key]:
+            if i < 1.1 and i > 0.9:
+                print("WARNING: Cannot determine if orbital is occupied or virtuel, might lead to error in choosing orbitals.")
+                if i > 1.0:
+                    print("Occupation: "+str(i)+" chosen as occupied.")
+                else:
+                    print("Occupation: "+str(i)+" chosen as virtuel.")
+            if i > 1.0:
+                inactive[key-1] += 1 # Will subtract picked orbitals later
+                j = np.argmax(picked_occ[:,1])
+                if i < picked_occ[j,1]:  
+                    picked_occ[j,0] = key
+                    picked_occ[j,1] = i
+    for i in picked_occ[:,0]:
+        RAS1[int(i)-1] += 1
+        inactive[int(i)-1] -= 1
+    for key in Natural_Occupations:
+        for i in Natural_Occupations[key]:
+            if i < 1.0:
+                if binom(np.sum(RAS1)*2,2)*binom(np.sum(RAS3)*2+2 - np.sum(RAS1)*2,2) < approx_determinant_limt:
+                    RAS3[key-1] += 1
+                else:
+                    break
+                
+    for i in picked_occ[:,0]:
+        RAS1[int(i)-1] += 1
+        inactive[int(i)-1] -= 1
+    return RAS1, RAS3, inactive
 
 
 
