@@ -44,25 +44,32 @@ def Pick_CAS_active_threshold(threshold, Natural_Occupations):
     return CAS, inactive
     
 
-def Pick_CAS_number_occupied(number_occ, Natural_Occupations):
+def Pick_CAS_number_occupied(number_occ, Natural_Occupations, allow_more_virt=False):
     """
     Function to pick a CAS based on number of wanted occupied active orbitals.
     The number of virtuel orbitals will be the same as the number of occupied.
     The occupied and virtuel is picked in the order, of being most different,
       from 2 or 0 respectively.
+    If number_occ is larger than what is possible, extra vitual orbitals can still 
+      be added if allow_more_virt=True is set
     """
     number_electrons = 0.5
     for key in Natural_Occupations:
         number_electrons += np.sum(Natural_Occupations[key])
     number_electrons = int(number_electrons)
+    # Incase allow_more_virt=True, number_virt can be larger than number_occ
+    number_virt = number_occ 
     # Cannot choose more occupied orbitals than allowed by number of electrons
     number_occ = np.min([number_occ, number_electrons//2])
+    if allow_more_virt == False:
+        number_virt = number_occ
+        
     CAS = np.zeros(len(Natural_Occupations), dtype=int)
     inactive = np.zeros(len(Natural_Occupations), dtype=int)
     # array to hold symmetry and occupation numbers of picked orbitals
     picked_occ = np.zeros((number_occ,2))
     picked_occ[:,:] = 3 # Set to three, all other occupations will be smaller
-    picked_virt = np.zeros((number_occ,2))
+    picked_virt = np.zeros((number_virt,2))
     inactive = np.zeros(len(Natural_Occupations), dtype=int)
     CAS = np.zeros(len(Natural_Occupations), dtype=int)
     for key in Natural_Occupations:
@@ -128,8 +135,9 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
                     picked_occ[j,0] = key
                     picked_occ[j,1] = i
     for i in picked_occ[:,0]:
-        RAS1[int(i)-1] += 1
-        inactive[int(i)-1] -= 1
+        if i != 2:
+            RAS1[int(i)-1] += 1
+            inactive[int(i)-1] -= 1
     for key in Natural_Occupations:
         for i in Natural_Occupations[key]:
             if i < 1.0:

@@ -67,10 +67,25 @@ class Input_Maker():
     def pick_CAS_by_active_threshold(self, threshold):
         self.CAS, self.inactive = heu.Pick_CAS_active_threshold(threshold, self.natural_occupations)
         
-    def pick_CAS_by_number_occupied(self, number_occupied):
-        self.CAS, self.inactive = heu.Pick_CAS_number_occupied(number_occupied, self.natural_occupations)
+    def pick_CAS_by_number_occupied(self, number_occupied, allow_more_virtuel=False):
+        """
+        Function to pick CAS space based on number of wanted occupied active orbitals.
+        One virtual orbtial will be added per active orbital.
         
-    def pick_RASCI_by_number_occupied(self, number_occupied):
+        If 2*number_occupied > number of electrons, more virtual orbitals will still
+          be added if allow_more_virtuel=True, allowing for more virtual orbitals than
+          occupied orbitals.
+          
+        Orbitals with occupation number == 2 will never be added.
+        """
+        self.CAS, self.inactive = heu.Pick_CAS_number_occupied(number_occupied, self.natural_occupations, allow_more_virt=allow_more_virtuel)
+        
+    def pick_RASCISD_by_number_occupied(self, number_occupied):
+        """
+        Function to pick RASCISD based on number of wanted active occupied orbitals.
+        
+        Orbitals with occupation number == 2 will never be added.
+        """
         self.RAS1, self.RAS3, self.inactive = heu.Pick_RASCI_number_occupied(number_occupied, self.natural_occupations)
         
     def scan_threshold_all(self):
