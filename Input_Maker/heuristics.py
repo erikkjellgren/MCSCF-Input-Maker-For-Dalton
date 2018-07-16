@@ -98,7 +98,6 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
     # array to hold symmetry and occupation numbers of picked orbitals
     picked_occ = np.zeros((number_occ,2))
     picked_occ[:,:] = 2 # Set to two, all other occupations will be smaller
-    picked_virt = np.zeros((number_occ,2))
     inactive = np.zeros(len(Natural_Occupations), dtype=int)
     CAS = np.zeros(len(Natural_Occupations), dtype=int)
     for key in Natural_Occupations:
@@ -116,6 +115,7 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
                     picked_occ[j,0] = key
                     picked_occ[j,1] = i
     for i in picked_occ[:,0]:
+        print(i)
         RAS1[int(i)-1] += 1
         inactive[int(i)-1] -= 1
     for key in Natural_Occupations:
@@ -125,10 +125,6 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
                     RAS3[key-1] += 1
                 else:
                     break
-                
-    for i in picked_occ[:,0]:
-        RAS1[int(i)-1] += 1
-        inactive[int(i)-1] -= 1
     return RAS1, RAS3, inactive
 
 
