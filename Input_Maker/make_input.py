@@ -80,13 +80,13 @@ class Input_Maker():
         """
         self.CAS, self.inactive = heu.Pick_CAS_number_occupied(number_occupied, self.natural_occupations, allow_more_virt=allow_more_virtuel)
         
-    def pick_RASCISD_by_number_occupied(self, number_occupied):
+    def pick_RASCISD_by_number_occupied(self, number_occupied, excitation_from_to=[0,0]):
         """
         Function to pick RASCISD based on number of wanted active occupied orbitals.
         
         Orbitals with occupation number == 2 will never be added.
         """
-        self.RAS1, self.RAS2, self.RAS3, self.inactive, self.active_electrons_in_RAS2 = heu.Pick_RASCI_number_occupied(number_occupied, self.natural_occupations)
+        self.RAS1, self.RAS2, self.RAS3, self.inactive, self.active_electrons_in_RAS2 = heu.Pick_RASCI_number_occupied(number_occupied, self.natural_occupations, excitation=excitation_from_to)
         
     def scan_threshold_all(self):
         anal.threshold_scan_all(self.natural_occupations)
