@@ -86,7 +86,7 @@ class Input_Maker():
         
         Orbitals with occupation number == 2 will never be added.
         """
-        self.RAS1, self.RAS3, self.inactive = heu.Pick_RASCI_number_occupied(number_occupied, self.natural_occupations)
+        self.RAS1, self.RAS2, self.RAS3, self.inactive, self.active_electrons_in_RAS2 = heu.Pick_RASCI_number_occupied(number_occupied, self.natural_occupations)
         
     def scan_threshold_all(self):
         anal.threshold_scan_all(self.natural_occupations)

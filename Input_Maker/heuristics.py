@@ -102,10 +102,12 @@ def Pick_CAS_number_occupied(number_occ, Natural_Occupations, allow_more_virt=Fa
     return CAS, inactive
 
 
-def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determinant_limt=7*10**6):
+def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determinant_limt=7*10**6, excitation=[0,0]):
     """
     Function to pick a RAS-CI active based on number number of 
       occupied orbitals wanted. 
+      
+    excitation = [from symmetry, to symmetry]
     """
     number_electrons = 0.5
     for key in Natural_Occupations:
@@ -115,6 +117,7 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
     number_occ = np.min([number_occ, number_electrons//2])
     RAS1 = np.zeros(len(Natural_Occupations), dtype=int)
     RAS2 = np.zeros(len(Natural_Occupations), dtype=int)
+    RAS2_electrons = 0
     RAS3 = np.zeros(len(Natural_Occupations), dtype=int)
     inactive = np.zeros(len(Natural_Occupations), dtype=int)
     # array to hold symmetry and occupation numbers of picked orbitals
@@ -151,8 +154,15 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
                         break
                 else:
                     RAS3[key-1] += 1
+    if excitation != [0,0]:
+        if RAS1[excitation[0]] != 0 and RAS3[excitation[1]] != 0:
+            RAS1[excitation[0]] -= 1
+            RAS2[excitation[0]] += 1
+            RAS2_electrons += 2
+            RAS3[excitation[1]] -= 1
+            RAS3[excitation[1]] += 1
 
-    return RAS1, RAS3, inactive
+    return RAS1, RAS2, RAS3, inactive, RAS2_electrons
 
 
 
