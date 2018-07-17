@@ -92,10 +92,11 @@ def Pick_CAS_number_occupied(number_occ, Natural_Occupations, allow_more_virt=Fa
                 if i > picked_virt[j,1]:  
                     picked_virt[j,0] = key
                     picked_virt[j,1] = i
-    for i in picked_occ[:,0]:
-        if i != 2.0:
-            CAS[int(i)-1] += 1
-            inactive[int(i)-1] -= 1
+    for i in range(len(picked_occ[:,0])):
+        idx = int(picked_occ[i,0]) - 1
+        if picked_occ[i,1] != 2:
+            CAS[idx] += 1
+            inactive[idx] -= 1
     for i in picked_virt[:,0]:
         CAS[int(i)-1] += 1
     return CAS, inactive
