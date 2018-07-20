@@ -54,6 +54,8 @@ class Input_Maker():
         self.srxfunctional = "SRXPBEGWS"
         self.srcfunctional = "SRCPBEGWS"
         self.range_separation_parameter = 0.4
+        # Response stuff
+        self.response = "undifened"
         
         """Some internal variables"""
         self.reorder_neglect_threshold = 0.001
@@ -283,6 +285,28 @@ class Input_Maker():
             self.__input_file.write(".DOSRIN\n")
             self.__input_file.write(".ERF\n")
             self.__input_file.write(" "+str(self.range_separation_parameter)+"\n")
+            
+        """Write singlet excitation response"""
+        if self.response == "excitation":
+            self.__input_file.write("**RESPONSE\n")
+            self.__input_file.wrute("*LINEAR\n")
+            self.__input_file.wrute(".SINGLE RESIDUE")
+            self.__input_file.wrute(".ROOTS")
+            for i in range(len(self.symmetry)):
+                self.__input_file.write(" 3")
+            self.__input_file.write("\n")
+            
+            self.__input_file.wrute(".NSTART\n")
+            for i in range(len(self.symmetry)):
+                self.__input_file.write(" 10")
+            self.__input_file.write("\n")
+            
+            self.__input_file.wrute(".NSIMUL\n")
+            for i in range(len(self.symmetry)):
+                self.__input_file.write(" 6")
+            self.__input_file.write("\n")
+            self.__input_file.wrute(".PRINT\n")
+            self.__input_file.wrute(" 4\n")
             
             
         self.__input_file.write("**END OF DALTON INPUT"+"\n")
