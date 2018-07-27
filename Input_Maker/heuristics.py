@@ -155,12 +155,12 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
                 else:
                     RAS3[key-1] += 1
     if excitation != [0,0]:
-        if RAS1[excitation[0]] != 0 and RAS3[excitation[1]] != 0:
+        if RAS1[excitation[0]-1] != 0 and RAS3[excitation[1]-1] != 0:
             RAS1[excitation[0]-1] -= 1
             RAS2[excitation[0]-1] += 1
             RAS2_electrons += 2
             RAS3[excitation[1]-1] -= 1
-            RAS3[excitation[1]-1] += 1
+            RAS2[excitation[1]-1] += 1
 
     return RAS1, RAS2, RAS3, inactive, RAS2_electrons
 

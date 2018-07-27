@@ -184,6 +184,7 @@ class Input_Maker():
         """Check coherence in settings"""
         self.MCSCF_method = str(self.MCSCF_method).lower()
         self.wavefunction_type = str(self.wavefunction_type).lower()
+        self.response = str(self.response).lower()
         if self.MCSCF_method == "mcscfsrdft":
             self.MCSCF_method = "lrmcscf"
         
@@ -204,7 +205,10 @@ class Input_Maker():
         """Write input file"""
         self.__input_file = open(self.file_name, "w+")
         self.__input_file.write("**DALTON INPUT"+"\n")
-        self.__input_file.write(".RUN WAVE FUNCTION"+"\n")
+        if self.response == "excitation" or self.response == "excitation_tda":
+            self.__input_file.write(".RUN RESPONSE\n")
+        else:
+            self.__input_file.write(".RUN WAVE FUNCTION"+"\n")
         self.__input_file.write("*MOLBAS\n")
         self.__input_file.write(".SYMTHR\n")
         self.__input_file.write(" "+str(self.symmetry_threshold)+"\n")
@@ -287,26 +291,28 @@ class Input_Maker():
             self.__input_file.write(" "+str(self.range_separation_parameter)+"\n")
             
         """Write singlet excitation response"""
-        if self.response == "excitation":
+        if self.response == "excitation" or self.response == "excitation_tda":
             self.__input_file.write("**RESPONSE\n")
-            self.__input_file.wrute("*LINEAR\n")
-            self.__input_file.wrute(".SINGLE RESIDUE")
-            self.__input_file.wrute(".ROOTS")
-            for i in range(len(self.symmetry)):
+            if self.response == "excitation_tda":
+                self.__input_file.write(".TDA\n")
+            self.__input_file.write("*LINEAR\n")
+            self.__input_file.write(".SINGLE RESIDUE\n")
+            self.__input_file.write(".ROOTS\n")
+            for i in range(self.__number_symmetreis):
                 self.__input_file.write(" 3")
             self.__input_file.write("\n")
             
-            self.__input_file.wrute(".NSTART\n")
-            for i in range(len(self.symmetry)):
+            self.__input_file.write(".NSTART\n")
+            for i in range(self.__number_symmetreis):
                 self.__input_file.write(" 10")
             self.__input_file.write("\n")
             
-            self.__input_file.wrute(".NSIMUL\n")
-            for i in range(len(self.symmetry)):
+            self.__input_file.write(".NSIMUL\n")
+            for i in range(self.__number_symmetreis):
                 self.__input_file.write(" 6")
             self.__input_file.write("\n")
-            self.__input_file.wrute(".PRINT\n")
-            self.__input_file.wrute(" 4\n")
+            self.__input_file.write(".PRINT\n")
+            self.__input_file.write(" 4\n")
             
             
         self.__input_file.write("**END OF DALTON INPUT"+"\n")
