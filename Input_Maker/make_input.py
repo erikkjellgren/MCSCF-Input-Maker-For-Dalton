@@ -18,18 +18,24 @@ class Input_Maker():
         self.__number_symmetreis = len(self.__orbitals_in_symmetries)
         self.__total_nuclei_charge = fload.total_nuclei_charge(self.__load_file)
         
-        if self.__type_wavefunction != "mp2": # Not MP2 wavefunction
-            self.natural_occupations = fload.Natural_Occupations(self.__load_file, self.__number_symmetreis)
+        if self.__type_wavefunction == "ci": # Not MP2 wavefunction
+            self.natural_occupations = fload.Natural_Occupations_CI(self.__load_file, self.__number_symmetreis)
             self.__total_electrons = fload.electrons(self.__load_file)
         
-        if self.__type_wavefunction == "mp2":
+        elif self.__type_wavefunction == "mp2":
             self.number_closed_shell = fload.closed_shell_number(self.__load_file)
             self.Hartree_Fock_orbital_energies = fload.HF_orb_energies(self.__load_file, self.__number_symmetreis)
             self.__total_electrons = fload.electronsMP2(self.__load_file)
             self.natural_occupations = fload.Natural_Occupations_MP2(self.__load_file, self.__number_symmetreis)
+        
+        else:
+            self.natural_occupations = fload.Natural_Occupations(self.__load_file, self.__number_symmetreis)
+            self.__total_electrons = fload.electrons(self.__load_file)
+        
             
         self.natural_occupation_sum = util.Natural_Occupation_Summation(self.natural_occupations)
         self.natural_occupations, self.natural_occupations_index = util.Sort_Natural_Occupations(self.natural_occupations)
+        self.relative_natural_occupations_occupied, self.relative_natural_occupations_virtuel = util.Relative_Natural_Occupations(self.natural_occupations)
         
         """Set variables for input files"""
         self.inactive = np.zeros(self.__number_symmetreis, dtype=int)
@@ -111,6 +117,10 @@ class Input_Maker():
         threshold for which occupation numbers will be printed. default=0.001
         """
         anal.print_natural_occ(self.natural_occupations, threshold, self.get_nat_occ_neglect_threshold)
+        
+        
+    def get_relative_natural_occupations(self):
+        anal.print_relative_natural_occ(self.relative_natural_occupations_occupied, self.relative_natural_occupations_virtuel, self.natural_occupations, self.get_nat_occ_neglect_threshold)
         
     def __write_active_space(self):
         self.__input_file.write("*CONFIGURATION INPUT"+"\n")
@@ -221,6 +231,8 @@ class Input_Maker():
             self.__input_file.write(".PLUS COMBINATIONS"+"\n")
             self.__input_file.write("*CI INPUT"+"\n")
             self.__input_file.write(".CINO"+"\n")
+            self.__input_file.write(".MAX ITERATIONS\n")
+            self.__input_file.write(" 100\n")
             self.__input_file.write(".STATE"+"\n")
             self.__input_file.write(" "+str(self.state)+"\n")
             

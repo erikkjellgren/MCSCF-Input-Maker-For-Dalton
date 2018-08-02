@@ -196,3 +196,41 @@ def Natural_Occupations(load_file, number_symmetries):
         if current_symmetry  == number_symmetries+1:
             break
     return Natural_Occupations
+    
+    
+def Natural_Occupations_CI(load_file, number_symmetries):
+    Natural_Occupations = {}
+    get_occupations_check = 0 # Check when HF energies are found
+    occupations_string = '' # Accumalte HF energies
+    occupations_array = np.zeros(1000) # Array to temp store energies
+    newline_check = 0 # Check newlines for stop
+    current_symmetry = 1
+    # CI wavefunctions can have natural occ, for more than one state
+    #  need to find the reference state
+    ref_state_check = 0 
+    for i in load_file:
+        if "= the reference state" in i:
+            ref_state_check = 1
+        if ref_state_check == 1:
+            if i[0:11] == " Symmetry "+str(current_symmetry):
+                get_occupations_check = 1
+            elif get_occupations_check == 1:
+                if i == "\n":
+                    newline_check += 1
+                occupations_string = occupations_string + i
+            if newline_check == 2:
+                get_occupations_check = 0 # Reset
+                newline_check = 0 # Reset
+                
+                data = occupations_string.split(" ")
+                counter = 0
+                for j in data:
+                    if j != '' and j != "\n":
+                        occupations_array[counter] = float(j)
+                        counter += 1
+                Natural_Occupations[current_symmetry] = np.copy(occupations_array[0:counter])
+                occupations_string = '' # Reset
+                current_symmetry += 1 # Go to next symmetry
+            if current_symmetry  == number_symmetries+1:
+                break
+    return Natural_Occupations

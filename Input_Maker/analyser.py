@@ -69,3 +69,51 @@ def print_natural_occ(natural_occupations, threshold, neglect_threshold):
                 counter -= 1
             else:
                 print("{0:.4f}   ".format(natural_occupations[key][i]),end="")
+                
+                
+def print_relative_natural_occ(relative_natural_occupied, relative_natural_virtuel, natural_occupations, neglect_threshold):
+    """
+    Function to print relative natural occupations.
+    
+    natural_occupations is used to make sure neglect_threshold will make the same
+      orbitals show for normal and relative print.
+    """
+    for key in relative_natural_occupied:
+        if key != 1:
+            print("")
+            print("")
+        print("Symmetry (occupied): ", key)
+        orbital_counter = 0
+        for i in range(len(relative_natural_occupied[key])):
+            if natural_occupations[key][i] > 2-neglect_threshold:
+                continue
+            if orbital_counter%5 == 0:
+                print("")
+            orbital_counter += 1
+            print("{0:.4f}   ".format(relative_natural_occupied[key][i]),end="")
+    for key in relative_natural_virtuel:
+        print("")
+        print("")
+        print("Symmetry (virtuel): ", key)
+        orbital_counter = 0
+        for i in range(len(relative_natural_virtuel[key])):
+            # len(relative_natural_occupied[key]) to find virtuel orbitals in the full list
+            if natural_occupations[key][i+len(relative_natural_occupied[key])] < neglect_threshold:
+                continue
+            if orbital_counter%5 == 0:
+                print("")
+            orbital_counter += 1
+            print("{0:.4f}   ".format(relative_natural_virtuel[key][i]),end="")
+                
+    
+
+
+
+
+
+
+
+
+
+
+
