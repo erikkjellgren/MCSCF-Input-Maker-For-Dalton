@@ -70,3 +70,16 @@ def test_lrMCSCF():
         
     for i in range(0, len(check_file)):
         assert check_file[i] == input_file[i]
+        
+        
+def test_occupied_threshold_electron_retrieval():
+    mc = make_input.Input_Maker("data/testfiles/Ethene_TZVP.out")
+    mc.pick_CAS_occupied_threshold_electron_retrieval(1.9987, retrieval_electron=0.9)
+    mc.MCSCF_method="cas"
+    mc.write_input_file(check_values_only=True)
+    
+    CAS_check = np.array([1, 1, 1, 0, 1, 1, 1, 0])
+    inactive_check = np.array([2, 0, 1, 0, 2, 0, 0, 0])
+    for i in range(0, len(mc.CAS)):
+        assert CAS_check[i] == mc.CAS[i]
+        assert inactive_check[i] == mc.inactive[i]

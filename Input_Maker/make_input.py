@@ -108,7 +108,7 @@ class Input_Maker():
         occ_threshold is choosen such that all occupied with an 
         occupation below the threshold will be included.
         """
-        self.CAS, self.inactive = heu.Pick_CAS_threshold_electron_retrieval(occupied_threshold=occ_threshold, electron_retrieval=retrieval_electron, Natural_Occupations=self.natural_occupations)
+        self.CAS, self.inactive = heu.Pick_CAS_threshold_electron_retrieval(occupied_threshold=occ_threshold, electron_retrieval=retrieval_electron, Natural_Occupations=self.natural_occupations, number_of_symmetries=self.__number_symmetreis)
         
     def scan_threshold_all(self):
         anal.threshold_scan_all(self.natural_occupations)

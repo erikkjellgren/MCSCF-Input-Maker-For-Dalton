@@ -164,7 +164,7 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
     return RAS1, RAS2, RAS3, inactive, RAS2_electrons
 
 
-def Pick_CAS_threshold_electron_retrieval(occupied_threshold, electron_retrieval, Natural_Occupations):
+def Pick_CAS_threshold_electron_retrieval(occupied_threshold, electron_retrieval, Natural_Occupations, number_of_symmetries):
     """
     Heuristic to pick CAS.
     
@@ -179,44 +179,44 @@ def Pick_CAS_threshold_electron_retrieval(occupied_threshold, electron_retrieval
             occupied is retrieved.
             
     The choosing of virtuel orbitals is symmetry independent.
+    
+    Assume that the keys are the numbers from 1 and upwards
     """
-    CAS = np.zeros(len(Natural_Occupations), dtype=int)
-    inactive = np.zeros(len(Natural_Occupations), dtype=int)
-    counter_symmetry = 0
+    CAS = np.zeros(number_of_symmetries, dtype=int)
+    inactive = np.zeros(number_of_symmetries, dtype=int)
     missing_electron = 0 # Counts how different the occupied orbitals are from zero
-    for key in Natural_Occupations:
+    for key in range(1, number_of_symmetries+1):
         counter_active = 0
         counter_inactive = 0
-        for i in Natural_Occupations[key]:
-            if i < 1.1 and i > 0.9:
-                print("WARNING: Natural occupation number close to one, might lead to error in choosing active orbitals.")
-            if i >= 1.0 and i <= occupied_threshold:
-                counter_active += 1
-                missing_electron += 2 - i
-            elif i > occupied_threshold:
-                counter_inactive += 1
-        CAS[counter_symmetry] = counter_active
-        inactive[counter_symmetry] = counter_inactive
-        counter_symmetry += 1
+        if key in Natural_Occupations:
+            for i in Natural_Occupations[key]:
+                if i < 1.1 and i > 0.9:
+                    print("WARNING: Natural occupation number close to one, might lead to error in choosing active orbitals.")
+                if i >= 1.0 and i <= occupied_threshold:
+                    counter_active += 1
+                    missing_electron += 2 - i
+                elif i > occupied_threshold:
+                    counter_inactive += 1
+        CAS[key-1] = counter_active
+        inactive[key-1] = counter_inactive
     # Pick virtuel orbitals from here
     all_virtuel = []
     all_virtuel_sym = []
-    counter_symmetry = 0
     for key in Natural_Occupations:
         # Make a list of all virtuel and their symmetry
         for occupation in Natural_Occupations[key]:
             if occupation < 1.0:
                 all_virtuel.append(occupation)
-                all_virtuel_sym.append(counter_symmetry)
-        counter_symmetry += 1
+                all_virtuel_sym.append(key)
     electron_retrieved = 0.0
     for i in range(0, 30):
         # Pick the largest occupation and then zero it
         index = np.argmax(all_virtuel)
-        CAS[all_virtuel_sym[index]] += 1
+        CAS[all_virtuel_sym[index]-1] += 1
         electron_retrieved += all_virtuel[index]
         electron_retrieved_percentage = 1 - abs(missing_electron - electron_retrieved)/missing_electron
         all_virtuel[index] = 0.0
+        print(all_virtuel_sym[index],electron_retrieved_percentage)
         if electron_retrieved_percentage > electron_retrieval:
             break
     return CAS, inactive
