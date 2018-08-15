@@ -119,8 +119,8 @@ class Input_Maker():
         anal.print_natural_occ(self.natural_occupations, threshold, self.get_nat_occ_neglect_threshold)
         
         
-    def get_relative_natural_occupations(self):
-        anal.print_relative_natural_occ(self.relative_natural_occupations_occupied, self.relative_natural_occupations_virtuel, self.natural_occupations, self.get_nat_occ_neglect_threshold)
+    def get_relative_natural_occupations(self, show_virtuel_occupations=True):
+        anal.print_relative_natural_occ(self.relative_natural_occupations_occupied, self.relative_natural_occupations_virtuel, self.natural_occupations, self.get_nat_occ_neglect_threshold, show_virtuel=show_virtuel_occupations)
         
     def __write_active_space(self):
         self.__input_file.write("*CONFIGURATION INPUT"+"\n")

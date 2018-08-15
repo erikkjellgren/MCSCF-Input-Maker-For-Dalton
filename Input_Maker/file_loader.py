@@ -176,6 +176,9 @@ def Natural_Occupations(load_file, number_symmetries):
     for i in load_file:
         if i[0:11] == " Symmetry "+str(current_symmetry):
             get_occupations_check = 1
+            if "No occupied orbitals" in i:
+                get_occupations_check = 0
+                current_symmetry += 1
         elif get_occupations_check == 1:
             if i == "\n":
                 newline_check += 1
@@ -214,6 +217,9 @@ def Natural_Occupations_CI(load_file, number_symmetries):
         if ref_state_check == 1:
             if i[0:11] == " Symmetry "+str(current_symmetry):
                 get_occupations_check = 1
+                if "No occupied orbitals" in i:
+                    get_occupations_check = 0
+                    current_symmetry += 1
             elif get_occupations_check == 1:
                 if i == "\n":
                     newline_check += 1
