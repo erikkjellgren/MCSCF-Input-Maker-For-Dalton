@@ -83,3 +83,20 @@ def test_occupied_threshold_electron_retrieval():
     for i in range(0, len(mc.CAS)):
         assert CAS_check[i] == mc.CAS[i]
         assert inactive_check[i] == mc.inactive[i]
+   
+        
+def test_occupied_threshold_electron_retrieval_noCAS():
+    """
+    Test that ensure, if no occupied orbitals are choosen,
+    that the return value will still be sane.
+    """
+    mc = make_input.Input_Maker("data/testfiles/Water_aug-cc-pVDZ.out")
+    mc.pick_CAS_occupied_threshold_electron_retrieval(1.9987, retrieval_electron=0.9)
+    mc.MCSCF_method="cas"
+    mc.write_input_file(check_values_only=True)
+    
+    CAS_check = np.array([0, 0, 0, 0])
+    inactive_check = np.array([3, 1, 1, 0])
+    for i in range(0, len(mc.CAS)):
+        assert CAS_check[i] == mc.CAS[i]
+        assert inactive_check[i] == mc.inactive[i]

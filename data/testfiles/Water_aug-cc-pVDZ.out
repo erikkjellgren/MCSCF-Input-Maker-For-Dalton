@@ -1,0 +1,2957 @@
+
+
+     ************************************************************************
+     *************** Dalton - An Electronic Structure Program ***************
+     ************************************************************************
+
+    This is output from DALTON release Dalton2018.alpha (2018)
+         ( Web site: http://daltonprogram.org )
+
+   ----------------------------------------------------------------------------
+
+    NOTE:
+     
+    Dalton is an experimental code for the evaluation of molecular
+    properties using (MC)SCF, DFT, CI, and CC wave functions.
+    The authors accept no responsibility for the performance of
+    the code or for the correctness of the results.
+     
+    The code (in whole or part) is provided under a licence and
+    is not to be reproduced for further distribution without
+    the written permission of the authors or their representatives.
+     
+    See the home page "http://daltonprogram.org" for further information.
+     
+    If results obtained with this code are published,
+    the appropriate citations would be both of:
+     
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
+       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
+       P. Dahle, E. K. Dalskov, U. Ekstroem,
+       T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
+       L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
+       C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
+       H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
+       M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
+       P. Joergensen, J. Kauczor, S. Kirpekar,
+       T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
+       J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
+       O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
+       C. Neiss, C. B. Nielsen, P. Norman, J. Olsen,
+       J. M. H. Olsen, A. Osted, M. J. Packer, F. Pawlowski,
+       T. B. Pedersen, P. F. Provasi, S. Reine, Z. Rinkevicius,
+       T. A. Ruden, K. Ruud, V. Rybkin, P. Salek, C. C. M. Samson,
+       A. Sanchez de Meras, T. Saue, S. P. A. Sauer,
+       B. Schimmelpfennig, K. Sneskov, A. H. Steindal,
+       K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
+       E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
+       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
+       and H. Agren,
+       "The Dalton quantum chemistry program system",
+       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+     
+    and
+     
+       Dalton, a Molecular Electronic Structure Program,
+       Release Dalton2018.alpha (2018), see http://daltonprogram.org
+   ----------------------------------------------------------------------------
+
+    Authors in alphabetical order (major contribution(s) in parenthesis):
+
+  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
+  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
+  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,             UiT The Arctic U. of Norway,  Norway      (DALTON installation and execution frameworks)
+  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
+  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
+  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
+  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
+  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
+  Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
+  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
+  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
+  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
+  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
+  Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
+  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
+  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
+  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
+  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
+  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
+  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
+  Kasper Hald,              Aarhus University,            Denmark     (CC module)
+  Asger Halkier,            Aarhus University,            Denmark     (CC module)
+  Frederik Beyer Hansen,    University of Copenhagen,     Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
+  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
+  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
+  Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding model)
+  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
+  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
+  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
+  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
+  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
+  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
+  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
+  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
+  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
+  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
+  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
+  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
+  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
+  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
+  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
+  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
+  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
+  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
+  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Andre S. P. Gomes         CNRS/Universite de Lille      France      (Frozen density embedding model)
+  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
+  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
+  Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
+  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
+  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
+  David P. Tew,             University of Bristol,        England     (CCSD(R12))
+  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher            Vrije Universiteit Amsterdam  Netherlands (Frozen density embedding model)
+  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
+  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+ --------------------------------------------------------------------------------
+
+     Date and time (Linux)  : Fri Aug 10 08:37:43 2018
+     Host name              : s22p26.deic.sdu.dk                      
+
+ * Work memory size             :   320000000 =  2.384 gigabytes.
+
+ * Directories for basis set searches:
+   1) /work/sdujk/kjellgren/MCsrDFT_triplet/triplet_response/lr_mu033
+   2) /gpfs/gss1/work/sdujk/kjellgren/programs/dalton/srdft_dalton_intel/basis
+
+
+Compilation information
+-----------------------
+
+ Who compiled             | kjellgren
+ Host                     | fe1.deic.sdu.dk
+ System                   | Linux-3.10.0-327.36.3.el7.x86_64
+ CMake generator          | Unix Makefiles
+ Processor                | x86_64
+ 64-bit integers          | OFF
+ MPI                      | ON
+ Fortran compiler         | /opt/sys/apps/intel/2018.05/impi_latest/intel64/bi
+                          | n/mpiifort
+ Fortran compiler version | unknown
+ C compiler               | /opt/sys/apps/intel/2018.05/impi_latest/intel64/bi
+                          | n/mpiicc
+ C compiler version       | unknown
+ C++ compiler             | /opt/sys/apps/intel/2018.05/impi_latest/intel64/bi
+                          | n/mpiicpc
+ C++ compiler version     | unknown
+ Static linking           | OFF
+ Configuration time       | 2018-08-09 13:02:57.002753
+
+ * MPI parallel run using 24 processes.
+
+
+   Content of the .dal input file
+ ----------------------------------
+
+*DALTON INPUT
+.RUN RESPONSE
+**INTEGRALS
+*TWOINT
+.DOSRINTEGRALS
+.ERF
+ 0.33
+**WAVE FUNCTIONS
+.MCSRDFT
+.SRFUN
+ SRXPBEGWSS SRCPBEGWSS
+*ORBITAL INPUT
+.MOSTART
+ NEWORB
+*OPTIMIZATION
+.DETERMINANTS
+*CONFIGURATION INPUT
+.SYMMETRY
+ 1
+.SPIN MUL
+ 1
+.INACTIVE
+ 2 1 0 0
+.ELECTRONS
+ 4
+.CAS SPACE
+ 2 0 2 0
+**RESPONSE
+.MAXRM
+ 2000
+*LINEAR
+.SINGLE RESIDUE
+.TRIPLET
+.ROOTS
+ 10 10 0 10
+.MAX IT
+ 100
+.PRINT
+ 4
+**END OF DALTON INPUT
+
+
+   Content of the .mol file
+ ----------------------------
+
+BASIS
+aug-cc-pVDZ
+ 10.1021/acs.jctc.8b00406
+ CC3/aug-cc-pVTZ geometry
+Atomtypes=2
+Charge=8.0 Atoms=1
+O 0.00000000 0.00000000 -0.13209669
+Charge=1.0 Atoms=2
+H 0.00000000 1.43152878 0.97970006
+H 0.00000000 -1.43152878 0.97970006
+
+
+       *******************************************************************
+       *********** Output from DALTON general input processing ***********
+       *******************************************************************
+
+ --------------------------------------------------------------------------------
+   Overall default print level:    0
+   Print level for DALTON.STAT:    1
+
+    Parallel calculation using MPI
+    AO-direct calculation (in sections where implemented)
+    HERMIT 1- and 2-electron integral sections will be executed
+    "Old" integral transformation used (limited to max 255 basis functions)
+    Wave function sections will be executed (SIRIUS module)
+    Dynamic molecular response properties section will be executed (RESPONSE module)
+ --------------------------------------------------------------------------------
+
+
+   ****************************************************************************
+   *************** Output of molecule and basis set information ***************
+   ****************************************************************************
+
+
+    The two title cards from your ".mol" input:
+    ------------------------------------------------------------------------
+ 1:  10.1021/acs.jctc.8b00406                                               
+ 2:  CC3/aug-cc-pVTZ geometry                                               
+    ------------------------------------------------------------------------
+
+  Atomic type no.    1
+  --------------------
+  Nuclear charge:   8.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    1
+  Basis set file used for this atomic type with Z =   8 :
+     "/gpfs/gss1/work/sdujk/kjellgren/programs/dalton/srdft_dalton_intel/basis/aug-cc-pVDZ"
+
+  Atomic type no.    2
+  --------------------
+  Nuclear charge:   1.00000
+  Number of symmetry independent centers:    2
+  Number of basis sets to read;    1
+  Basis set file used for this atomic type with Z =   1 :
+     "/gpfs/gss1/work/sdujk/kjellgren/programs/dalton/srdft_dalton_intel/basis/aug-cc-pVDZ"
+
+
+                      SYMADD: Requested addition of symmetry
+                      --------------------------------------
+
+ Symmetry test threshold:  5.00E-06
+
+@   The molecule is centered at center of mass and rotated
+@   so principal axes of inertia are along coordinate axes.
+
+ Symmetry class found: C(2v)          
+
+ Symmetry Independent Centres             
+ ----------------------------
+       8 :      0.00000000     0.00000000    -0.12442659  Isotope  1
+       1 :      0.00000000     1.43152878     0.98737016  Isotope  1
+
+ The following elements were found:   X  Y     
+
+
+                         SYMGRP: Point group information
+                         -------------------------------
+
+@    Full point group is: C(2v)          
+@    Represented as:      C2v
+
+@  * The irrep name for each symmetry:    1: A1     2: B1     3: B2     4: A2 
+
+   * The point group was generated by:
+
+      Reflection in the yz-plane
+      Reflection in the xz-plane
+
+   * Group multiplication table
+
+        |  E   C2z  Oxz  Oyz
+   -----+--------------------
+     E  |  E   C2z  Oxz  Oyz
+    C2z | C2z   E   Oyz  Oxz
+    Oxz | Oxz  Oyz   E   C2z
+    Oyz | Oyz  Oxz  C2z   E 
+
+   * Character table
+
+        |  E   C2z  Oxz  Oyz
+   -----+--------------------
+    A1  |   1    1    1    1
+    B1  |   1   -1    1   -1
+    B2  |   1   -1   -1    1
+    A2  |   1    1   -1   -1
+
+   * Direct product table
+
+        | A1   B1   B2   A2 
+   -----+--------------------
+    A1  | A1   B1   B2   A2 
+    B1  | B1   A1   A2   B2 
+    B2  | B2   A2   A1   B1 
+    A2  | A2   B2   B1   A1 
+
+
+                                 Isotopic Masses
+                                 ---------------
+
+                           O          15.994915
+                           H   _1      1.007825
+                           H   _2      1.007825
+
+                       Total mass:    18.010565 amu
+                       Natural abundance:  99.730 %
+
+ Center-of-mass coordinates (a.u.):    0.000000    0.000000   -0.000000
+ Center-of-mass coordinates (Angs):    0.000000    0.000000   -0.000000
+
+
+  Atoms and basis sets
+  --------------------
+
+  Number of atom types :    2
+  Total number of atoms:    3
+
+  Basis set used is "aug-cc-pVDZ" from the basis set library.
+
+  label    atoms   charge   prim   cont     basis
+  ----------------------------------------------------------------------
+  O           1    8.0000    35    23      [10s5p2d|4s3p2d]                                   
+  H           2    1.0000    11     9      [5s2p|3s2p]                                        
+  ----------------------------------------------------------------------
+  total:      3   10.0000    57    41
+  ----------------------------------------------------------------------
+  Spherical harmonic basis used.
+
+  Threshold for neglecting AO integrals:  1.00D-12
+
+
+  Cartesian Coordinates (a.u.)
+  ----------------------------
+
+  Total number of coordinates:    9
+  O       :     1  x   0.0000000000    2  y   0.0000000000    3  z  -0.1244265862
+  H   / 1 :     4  x   0.0000000000    5  y   1.4315287800    6  z   0.9873701638
+  H   / 2 :     7  x   0.0000000000    8  y  -1.4315287800    9  z   0.9873701638
+
+
+  Symmetry Coordinates
+  --------------------
+
+  Number of coordinates in each symmetry:     3    2    3    1
+
+  Symmetry  A1  ( 1)
+
+    1   O     z    3
+    2   H     y    [  5  -    8 ]/2
+    3   H     z    [  6  +    9 ]/2
+
+  Symmetry  B1  ( 2)
+
+    4   O     x    1
+    5   H     x    [  4  +    7 ]/2
+
+  Symmetry  B2  ( 3)
+
+    6   O     y    2
+    7   H     y    [  5  +    8 ]/2
+    8   H     z    [  6  -    9 ]/2
+
+  Symmetry  A2  ( 4)
+
+    9   H     x    [  4  -    7 ]/2
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            O           H   _1      H   _2
+            ------      ------      ------
+ O     :    0.000000
+ H   _1:    0.959164    0.000000
+ H   _2:    0.959164    1.515065    0.000000
+
+
+  Max    interatomic separation is    1.5151 Angstrom (    2.8631 Bohr)
+  between atoms    3 and    2, "H   _2" and "H   _1".
+
+  Min HX interatomic separation is    0.9592 Angstrom (    1.8126 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  H   _1     O            0.959164
+  bond distance:  H   _2     O            0.959164
+
+
+  Bond angles (degrees):
+  ----------------------
+
+                  atom 1     atom 2     atom 3         angle
+                  ------     ------     ------         -----
+  bond angle:     H   _1     O          H   _2       104.331
+
+
+
+
+ Principal moments of inertia (u*A**2) and principal axes
+ --------------------------------------------------------
+
+   IA       0.619616          0.000000    1.000000    0.000000
+   IB       1.156692          0.000000    0.000000    1.000000
+   IC       1.776308          1.000000    0.000000    0.000000
+
+
+ Rotational constants
+ --------------------
+
+@    The molecule is planar.
+
+               A                   B                   C
+
+         815632.2859         436917.7022         284510.9477 MHz
+           27.206565           14.574006            9.490264 cm-1
+
+
+@  Nuclear repulsion energy :    9.176580466758 Hartree
+
+
+  Symmetry Orbitals
+  -----------------
+
+  Number of orbitals in each symmetry:          18    7   12    4
+
+
+  Symmetry  A1 ( 1)
+
+    1     O        1s         1
+    2     O        1s         2
+    3     O        1s         3
+    4     O        1s         4
+    5     O        2pz        7
+    6     O        2pz       10
+    7     O        2pz       13
+    8     O        3d0       16
+    9     O        3d2+      18
+   10     O        3d0       21
+   11     O        3d2+      23
+   12     H        1s        24 +   25
+   13     H        1s        26 +   27
+   14     H        1s        28 +   29
+   15     H        2py       32 -   33
+   16     H        2pz       34 +   35
+   17     H        2py       38 -   39
+   18     H        2pz       40 +   41
+
+
+  Symmetry  B1 ( 2)
+
+   19     O        2px        5
+   20     O        2px        8
+   21     O        2px       11
+   22     O        3d1+      17
+   23     O        3d1+      22
+   24     H        2px       30 +   31
+   25     H        2px       36 +   37
+
+
+  Symmetry  B2 ( 3)
+
+   26     O        2py        6
+   27     O        2py        9
+   28     O        2py       12
+   29     O        3d1-      15
+   30     O        3d1-      20
+   31     H        1s        24 -   25
+   32     H        1s        26 -   27
+   33     H        1s        28 -   29
+   34     H        2py       32 +   33
+   35     H        2pz       34 -   35
+   36     H        2py       38 +   39
+   37     H        2pz       40 -   41
+
+
+  Symmetry  A2 ( 4)
+
+   38     O        3d2-      14
+   39     O        3d2-      19
+   40     H        2px       30 -   31
+   41     H        2px       36 -   37
+
+  Symmetries of electric field:  B1 (2)  B2 (3)  A1 (1)
+
+  Symmetries of magnetic field:  B2 (3)  B1 (2)  A2 (4)
+
+
+                     .---------------------------------------.
+                     | Starting in Integral Section (HERMIT) |
+                     `---------------------------------------'
+
+
+
+ ***************************************************************************************
+ ****************** Output from **INTEGRALS input processing (HERMIT) ******************
+ ***************************************************************************************
+
+
+
+    *************************************************************************
+    ****************** Output from HERMIT input processing ******************
+    *************************************************************************
+
+
+ Default print level:        1
+
+ * Nuclear model: Point charge
+
+ Calculation of one-electron Hamiltonian integrals.
+
+ Center of mass  (bohr):      0.000000000000      0.000000000000     -0.000000000000
+ Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Gauge origin    (bohr):      0.000000000000      0.000000000000     -0.000000000000
+ Dipole origin   (bohr):      0.000000000000      0.000000000000     -0.000000000000
+
+
+  Set-up from HR2INP:
+  -------------------
+
+ Print level in TWOINT:    1
+
+ DFT-hybrid : Using a Erf type two-elec. operator
+              with the coupling parameter :    0.33000
+ * Direct calculation of Fock matrices in AO-basis.
+ * Program controlled screening thresholds used for this.
+ * Separate density screening of Coulomb integral batches
+ * Separate density screening of exchange integral batches
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+
+                      Nuclear contribution to dipole moments
+                      --------------------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      z      0.97932764         2.48920241         8.30308549
+
+
+  Total CPU  time used in HERMIT:   0.01 seconds
+  Total wall time used in HERMIT:   0.01 seconds
+
+
+                        .----------------------------------.
+                        | End of Integral Section (HERMIT) |
+                        `----------------------------------'
+
+
+
+                   .--------------------------------------------.
+                   | Starting in Wave Function Section (SIRIUS) |
+                   `--------------------------------------------'
+
+
+ CI program in use: SIRIUS-CI
+* Read MO coefficients from SIRIUS.RST with label "NEWORB  " and header info:  9Aug18  (CNOORB)
+
+ SETCI, core memory needed for CI:
+ LCINDX =         143
+ LACIMX =         338
+ LBCIMX =           0
+
+ Number of determinants:            20
+
+ Number of configurations:          20
+
+ Time used in SETCI :      0.36s
+
+ **********************************************************************
+ *SIRIUS* a direct, restricted step, second order MCSCF program       *
+ **********************************************************************
+
+ 
+     Date and time (Linux)  : Fri Aug 10 08:37:44 2018
+     Host name              : s22p26.deic.sdu.dk                      
+
+ Title lines from ".mol" input file:
+      10.1021/acs.jctc.8b00406                                               
+      CC3/aug-cc-pVTZ geometry                                               
+
+ Print level on unit LUPRI =   2 is   0
+ Print level on unit LUW4  =   2 is   5
+
+@    MC-SCF optimization.
+
+@    Multi-configurational response calculation.
+@              Type: complete active space calculation (CAS).
+ Fock matrices are calculated directly and in parallel without use of integrals on disk.
+
+ Initial molecular orbitals are obtained according to
+ ".MOSTART NEWORB" input option
+
+     Wave function specification
+     ============================
+@    Wave function type        --- MC-SCF ---
+@    Number of closed shell electrons           6
+@    Number of electrons in active shells       4
+@    Total charge of the molecule               0
+
+@    Spin multiplicity and 2 M_S                1         0
+@    Total number of symmetries                 4 (point group: C2v)
+@    Reference state symmetry                   1 (irrep name : A1 )
+
+@    This is a lrWFT-srDFT calculation using the 
+@      SRXPBEGWSS short range exchange functional
+@      SRCPBEGWSS short range correlation functional
+
+@    sr-DFT and exact sr-HF exchange weights:    1.000000    0.000000
+
+     Orbital specifications
+     ======================
+@    Abelian symmetry species          All |    1    2    3    4
+@                                          |  A1   B1   B2   A2 
+                                       --- |  ---  ---  ---  ---
+@    Inactive orbitals                   3 |    2    1    0    0
+@    Active orbitals                     4 |    2    0    2    0
+@    Secondary orbitals                 34 |   14    6   10    4
+@    Total number of orbitals           41 |   18    7   12    4
+@    Number of basis functions          41 |   18    7   12    4
+
+     Optimization information
+     ========================
+@    Number of determinants                  20
+@    Number of orbital rotations             86
+     ------------------------------------------
+@    Total number of variables              106
+
+     Maximum number of macro iterations      25
+     Maximum number of micro iterations     600
+     Threshold for MCSCF gradient      1.00D-05
+     Number of initial trial vectors          1
+     Number of initial CI iterations         20
+     Number of simultaneous trial vectors     1
+
+@    This calculation converges to the lowest state for the specified symmetry and spin species.
+
+     Maximum number of NEO/NR iterations  24
+
+
+        SIRIUS MC-srDFT optimization (SIROPT)
+ ================================================
+
+
+ Fock matrix screening setting for SIRCNO: IFTHRS =    9
+
+INFO : spin density ignored in initial CI iterations.
+
+
+ ----- Output from SIRIUS CI module (CICTL) -----
+
+
+
+
+---> (Re)generating AOTWOINT
+---> and (re)generating AOSR2INT
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:       91298 ( 24.6% )
+ HERMIT - Megabytes written:                              1.051
+
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:       91307 ( 24.6% )
+ HERMIT - Megabytes written:                              1.051
+
+
+ 2-el. integral transformation level 0: Total CPU and WALL times (sec)       0.044       0.044
+
+ (CIST1)  4 lowest diagonal elements:
+
+ Element no. Config.no.    Active energy      Total energy
+
+         1 :          5    -17.5044262768    -98.9593249993
+         2 :          7    -15.4312066904    -96.8861054128
+         3 :         13    -15.4312066904    -96.8861054128
+         4 :          6    -14.9705868901    -96.4254856125
+
+
+ Convergence threshold for CI optimization :     0.00000500
+
+
+ The requested root number is now converged.
+
+
+ *** CI converged in  5 iterations.
+
+
+SR 0-el. energy for input .STATE    1
+-------------------------------------
+
+   SR core    Hartree energy   :          17.387362684812
+ - SR valence Hartree energy   :          -2.645086545632
+ + SR Exchange-correlation     :          -7.510242736161
+ - SR Exchange-correlation pot.:           2.047975291991
+
+ = Total eff. SR 0-el. energy  :           9.280008695009
+
+CI-DFT energy for state no.    1
+-------------------------------------
+
+ SR eff. 1-el. energy          :          13.319905001159
+ SR total Hartree energy       :          30.110156432329
+ SR eff. total DFT energy      :          22.599913696168
+ LR total CI  energy           :         -98.959916576257
+
+ Total CI-DFT energy           :         -76.360002880089
+
+ Decomposition of the auxiliary CI-srDFT energy:
+ ELRCI        :         -98.959916576257
+ EMYDFTAUX    :          36.767928977109
+ ESRDV        :          13.319905001159
+ POTNUC       :           9.176580466758
+ 
+
+ Auxiliary CI-srDFT energy for root 1:       -58.048663064747
+
+
+@ Final CI energies and residuals in symmetry 1 (irrep A1 )
+@    1      -76.360002880088899       3.24D-07
+
+   --- OUTPUT FROM SIRCNO     Keyword = FD+NO 
+
+
+***  INFO  GETGAB: GABSRXXX not found on AOPROPER. Regenerating.
+
+   Ex-sr + Ec-sr                         -7.5100633816
+ + EJsr = sr Coulomb energy              30.1087121758
+ = Total E(srDFT)                        22.5986487942
+
+
+ Corrections needed for correct CI energy evaluation:
+ - 0.5 Tr(Vxc-sr Dcore)                   4.0422333439
+ -     Tr(Vxc-sr Dval)                    2.0477701905
+ - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )       -7.6830088530
+
+ Occupations of CAS natural orbitals:
+
+ Symmetry  1 ( irrep A1  in C2v )
+
+   1.999660965   0.000331787
+
+ Symmetry  3 ( irrep B2  in C2v )
+
+   1.999599498   0.000407750
+
+
+ --- MACRO ITERATION  1 ---
+ --------------------------
+
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.013       0.013
+
+ Fock matrix screening setting for this macro iteration: 10^( -9)
+
+   Ex-sr + Ec-sr                         -7.5100633816
+ + EJsr = sr Coulomb energy              30.1087121758
+ = Total E(srDFT)                        22.5986487942
+
+
+ Corrections needed for correct CI energy evaluation:
+ - 0.5 Tr(Vxc-sr Dcore)                   4.0422333439
+ -     Tr(Vxc-sr Dval)                    2.0477701905
+ - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )       -7.6830088530
+
+ Total MC-srDFT energy    :           -76.360002855033940  (MACRO    1)
+
+ - Nuclear repulsion      :             9.176580466757848
+ - Inactive energy        :           -72.248009210389228
+ - Active energy          :            -4.185505411165481
+ - srDFT effective energy :            -9.103068700237095
+
+ Norm of total gradient   :             0.000162475592
+ -    of CI gradient      :             0.000124312924
+ -    of orbital gradient :             0.000104616513
+      Virial theorem: -V/T =      2.027266
+@    MULPOP   O       0.93; H   _1 -0.47; H   _2 -0.47; 
+
+ Residual norm when dim(red L) =   4
+ NEO root     CSF        orbital          total
+    1     0.00000205     0.00000502     0.00000542 converged
+
+ (NEONEX) NEO vector is converged.
+
+   --- OUTPUT FROM SIRCNO     Keyword = FD+NO 
+
+
+   Ex-sr + Ec-sr                         -7.5100786653
+ + EJsr = sr Coulomb energy              30.1088786449
+ = Total E(srDFT)                        22.5987999796
+
+
+ Corrections needed for correct CI energy evaluation:
+ - 0.5 Tr(Vxc-sr Dcore)                   4.0422364685
+ -     Tr(Vxc-sr Dval)                    2.0477844552
+ - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )       -7.6831111748
+
+ Occupations of CAS natural orbitals:
+
+ Symmetry  1 ( irrep A1  in C2v )
+
+   1.999660996   0.000331751
+
+ Symmetry  3 ( irrep B2  in C2v )
+
+   1.999599541   0.000407712
+
+
+ --- MACRO ITERATION  2 ---
+ --------------------------
+
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.012       0.012
+
+ Fock matrix screening setting for this macro iteration: 10^( -9)
+
+   Ex-sr + Ec-sr                         -7.5100786653
+ + EJsr = sr Coulomb energy              30.1088786449
+ = Total E(srDFT)                        22.5987999796
+
+
+ Corrections needed for correct CI energy evaluation:
+ - 0.5 Tr(Vxc-sr Dcore)                   4.0422364685
+ -     Tr(Vxc-sr Dval)                    2.0477844552
+ - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )       -7.6831111748
+
+ Total MC-srDFT energy    :           -76.360002858803625  (MACRO    2)
+
+ - Nuclear repulsion      :             9.176580466757848
+ - Inactive energy        :           -72.247950150030533
+ - Active energy          :            -4.185464259033981
+ - srDFT effective energy :            -9.103168916496960
+
+ Norm of total gradient   :             0.000005422725
+ -    of CI gradient      :             0.000002047619
+ -    of orbital gradient :             0.000005021275
+      Virial theorem: -V/T =      2.027264
+@    MULPOP   O       0.93; H   _1 -0.47; H   _2 -0.47; 
+
+ (SIRSTP) Energy difference;
+ actual, predicted and ratio:  -0.000000003769685  -0.000000003769666    1.000005
+ Close to convergence, ratio set to one.
+
+ *** Optimization control: MC-srDFT converged ***
+     Number of macro iterations used            2
+     Number of micro iterations used            3
+     Total number of CPU seconds used         1.50
+
+ CPU and wall time for MCSCF :       1.500       1.507
+
+
+                     .----------------------------------------.
+                     | --- SIRIUS OPTIMIZATION STATISTICS --- |
+                     `----------------------------------------'
+
+
+ 
+     Date and time (Linux)  : Fri Aug 10 08:37:45 2018
+     Host name              : s22p26.deic.sdu.dk                      
+
+
+  ITER ITMIC     EMCSCF           GRDNRM        RATIO      STPLNG
+ ---------------------------------------------------------------------
+    1    3    -76.360002855034   0.0001624756  0.000000   0.0000632687
+    2    0    -76.360002858804   0.0000054227  1.000000   0.0000000000
+
+
+  ITER  INDGCM  GCIMAX      GCINRM     INDGOM  GOBMAX      GOBNRM      GRDNRM
+ ------------------------------------------------------------------------------
+    1     13   -0.000088    0.000124     70    0.000045    0.000105    0.000162
+    2     16   -0.000001    0.000002     45    0.000003    0.000005    0.000005
+
+
+  ITER ITMIC NCLIN NOLIN   TIMMAC    TIMITR    TIMMIC    TIMLIN    TIMMIC/ITMIC
+ ------------------------------------------------------------------------------
+
+    1     3     2     1      0.58      0.01      0.49      0.40      0.16
+    2     0     0     0      0.09      0.01      0.00      0.00
+
+
+ ITER         EMY                 EACTIV              EMCSCF
+
+    1    -81.351077910626     -4.185505411165    -76.360002855034
+    2    -81.351119066527     -4.185464259034    -76.360002858804
+
+
+ ITER         DEPRED              DEACT               RATIO
+
+    1      0.000000000000      0.000000000000      0.000000000000
+    2     -0.000000003770     -0.000000003770      1.000000000000
+
+
+ ITER    BETA           GAMMA             STPLNG              RTRUST
+
+    1      0.20000000  1.00000000      0.000063268723      0.700000000000
+    2      0.00000000  0.00000000      0.000000000000      0.700000000000
+
+
+ Reduced L root no.  1
+ ITER         EVAL              EVEC(1)           EVEC(2)           EVEC(3)
+ ----------------------------------------------------------------------------
+    1   -0.000000000302    0.999999999920   -0.000012119744   -0.000003591126
+    2    0.000000000000    0.000000000000    0.000000000000    0.000000000000
+
+
+                       .-----------------------------------.
+                       | --- Final results from SIRIUS --- |
+                       `-----------------------------------'
+
+
+@    Spin multiplicity:           1
+@    Spatial symmetry:            1 ( irrep  A1  in C2v )
+@    Total charge of molecule:    0
+@    State number:                1
+
+@    Final MC-SRDFT energy:       -76.360002858804                 
+@    Nuclear repulsion:             9.176580466758
+@    Electronic energy:           -85.536583325561
+
+@    Final gradient norm:           0.000005422725
+
+ 
+     Date and time (Linux)  : Fri Aug 10 08:37:45 2018
+     Host name              : s22p26.deic.sdu.dk                      
+
+ Occupancies of natural orbitals
+ -------------------------------
+
+ Symmetry 1  ( A1 ) -- Total occupation in this symmetry is   5.999992747
+
+   2.000000000   2.000000000   1.999660996   0.000331751
+
+ Symmetry 2  ( B1 ) -- Total occupation in this symmetry is   2.000000000
+
+   2.000000000
+
+ Symmetry 3  ( B2 ) -- Total occupation in this symmetry is   2.000007253
+
+   1.999599541   0.000407712
+
+ Symmetry 4  ( A2 ) -- No occupied orbitals
+
+File label for MO orbitals:  10Aug18   (CNOORB)
+
+ (Only coefficients > 0.0100 are printed.)
+
+ Molecular orbitals for symmetry species 1  (A1 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 O   :1s     1.0046  -0.0059  -0.0004  -0.0192   0.0024   0.0323  -0.0271
+   2 O   :1s     0.0227   0.8944  -0.2563  -0.3492  -0.0943   0.1918  -0.3619
+   3 O   :1s    -0.0308  -0.1435  -0.1563  -0.1658  -0.1370  -0.4315   0.2039
+   4 O   :1s    -0.0118   0.0730  -0.1145  -0.2805  -1.3641  -4.0141   3.1379
+   5 O   :2pz    0.0048   0.1015   0.8197  -0.1347  -0.0981   0.3328  -0.0314
+   6 O   :2pz   -0.0047  -0.0845  -0.0873  -0.0327  -0.0967  -0.1307   0.1588
+   7 O   :2pz   -0.0016   0.0083   0.0494  -0.0060  -0.1629  -1.7576  -0.6277
+   8 O   :3d0    0.0000   0.0027   0.0159  -0.1221   0.0021   0.0090   0.0206
+   9 O   :3d2+  -0.0004  -0.0080  -0.0023  -0.1083   0.0065  -0.0040   0.0103
+  10 O   :3d0    0.0002  -0.0070   0.0151  -0.3152   0.0167  -0.0358  -0.0413
+  11 O   :3d2+   0.0008   0.0179   0.0165  -0.2154   0.0213   0.0449  -0.0304
+  12 H   :1s     0.0024   0.3409   0.3794   0.6259  -0.0190   0.0080   0.0000
+  13 H   :1s     0.0084  -0.1954  -0.1182  -0.0374   0.3560   1.6460  -0.7274
+  14 H   :1s     0.0008  -0.0024   0.0073   0.0014   0.8302   0.6663  -0.6143
+  15 H   :2py    0.0005  -0.0341  -0.0283   0.0877  -0.0018  -0.0335   0.0065
+  16 H   :2pz    0.0005  -0.0208   0.0035  -0.0808   0.0084  -0.0286   0.0238
+  17 H   :2py   -0.0030   0.0031  -0.0047   0.1419  -0.1510  -0.2837   0.1689
+  18 H   :2pz   -0.0027   0.0052   0.0200  -0.1879  -0.0240  -0.2115   0.6311
+
+    Orbital         8        9       10       11       12       13       14
+   1 O   :1s    -0.0074  -0.0526  -0.0866   0.0434  -0.0876  -0.1836   0.3063
+   2 O   :1s    -0.0280   0.1505  -0.0972   0.3169  -0.3087  -1.0156   1.2813
+   3 O   :1s     0.1329   1.9241   2.0424  -0.2124   1.7896   1.0598  -2.4570
+   4 O   :1s     5.7809   3.5940   6.3227  -1.8122   3.8790  -1.3735  -1.3206
+   5 O   :2pz    0.3643   0.3021   0.0600   0.0156  -0.9085   0.9333  -0.0602
+   6 O   :2pz    0.5715   0.3411   0.2206  -0.1808   1.7330  -1.9627   0.6044
+   7 O   :2pz    1.9738   0.4225   0.8864  -1.1807   0.7475  -0.1431  -0.1625
+   8 O   :3d0   -0.0084   0.0035   0.0064  -0.0024   0.0116  -0.0035  -0.0814
+   9 O   :3d2+   0.0011  -0.0024  -0.0344   0.0138  -0.0761  -0.0434  -0.0645
+  10 O   :3d0    0.0184   0.1460  -0.3590  -0.9913   0.1433  -0.0890   1.3248
+  11 O   :3d2+  -0.0244   0.2000  -0.5668   0.2734   0.6708   0.8530   0.7653
+  12 H   :1s    -0.2164  -0.4058   0.5077  -0.4828   0.8257   1.4938   0.0847
+  13 H   :1s    -2.9746  -1.6111  -4.4197   1.4656  -3.1773  -0.4994   1.0231
+  14 H   :1s    -0.3772  -0.4873  -0.3660   0.0589  -0.2050   0.1509   0.0835
+  15 H   :2py    0.0454  -0.0318   0.1159  -0.0472   0.2881   0.1139   0.6235
+  16 H   :2pz    0.0062  -0.0119   0.0378  -0.0729   0.1708  -0.0278  -0.9595
+  17 H   :2py    0.1739   1.3726   0.3357  -0.2359   0.7189   0.0521  -0.2438
+  18 H   :2pz   -0.4203   0.6812   1.1626   0.5500   0.1809   0.2540  -0.4097
+
+ Molecular orbitals for symmetry species 2  (B1 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 O   :2px    0.9242   0.3185  -0.2625  -0.3608  -1.3871   0.0066   0.0663
+   2 O   :2px   -0.0100   0.0972  -0.4841   0.2303   2.2671   0.7864  -0.1963
+   3 O   :2px    0.0914  -1.3952  -1.1903  -0.7548   0.1749  -0.1718  -0.3175
+   4 O   :3d1+   0.0149   0.0170   0.0216   0.0051   0.0057  -0.0616   1.1936
+   5 O   :3d1+   0.0191  -0.0515  -0.0432  -1.0870   0.4514   0.7051  -0.6820
+   6 H   :2px    0.0277  -0.0086   0.0109  -0.0203   0.0046  -0.9929  -0.1077
+   7 H   :2px    0.0285   0.2497   1.1728   0.5706  -0.6290   0.0837   0.3080
+
+ Molecular orbitals for symmetry species 3  (B2 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 O   :2py    0.7572   0.4731  -0.0587  -0.2992  -0.1510  -0.3014   0.3273
+   2 O   :2py   -0.2057   0.2255  -0.0705   0.3812  -0.1475  -0.2739   1.4463
+   3 O   :2py    0.0092   0.2553  -0.7195   2.9886  -2.3595  -0.3545   2.6215
+   4 O   :3d1-   0.0257  -0.1391  -0.0064  -0.0096  -0.0263   0.0210   0.0423
+   5 O   :3d1-  -0.0430  -0.3004  -0.0308   0.0871  -0.1149   0.4239   0.3770
+   6 H   :1s     0.6155  -0.7442  -0.0673  -0.1312  -0.1473   0.4936   0.0652
+   7 H   :1s    -0.1671  -0.0218   0.4826  -2.3894  -0.4772   0.5045  -8.8093
+   8 H   :1s     0.0042  -0.0938   2.9455  -2.6749   0.7867   0.7838  -1.2898
+   9 H   :2py   -0.0202  -0.0084   0.0010   0.0410  -0.0308   0.0542   0.0557
+  10 H   :2pz   -0.0315  -0.0555   0.0005   0.0225  -0.0121   0.0687   0.0881
+  11 H   :2py   -0.0209  -0.0236  -0.1312   0.5407   2.1926  -0.6260   3.2153
+  12 H   :2pz   -0.0143  -0.1272  -0.1787   0.4893  -0.8455  -1.3053   1.1998
+
+    Orbital         8        9       10       11       12
+   1 O   :2py   -0.9614  -0.4139   1.3127  -0.0189  -0.4820
+   2 O   :2py    2.5137   0.9566  -2.4213  -3.7742  -2.2829
+   3 O   :2py    1.2095   1.0308  -0.3921  -1.1797  -0.5846
+   4 O   :3d1-   0.0866  -0.0649   0.0097   0.3857  -1.3213
+   5 O   :3d1-  -0.6878   0.6986  -0.5729  -2.0126  -0.2891
+   6 H   :1s     0.6681  -0.7859   1.0324   3.6692   2.6535
+   7 H   :1s    -5.2572  -0.3796   1.9316   2.6200   1.2196
+   8 H   :1s    -0.3216  -0.4766   0.3476   0.4028   0.1544
+   9 H   :2py    0.2555   0.4896   0.7196  -0.3584  -0.6813
+  10 H   :2pz    0.2591  -0.6586   0.2453  -0.6305  -0.5719
+  11 H   :2py    1.3853  -0.3786  -1.1729  -1.3299  -0.7034
+  12 H   :2pz    1.2026   0.6483  -0.5529  -0.6220  -0.5890
+
+ Molecular orbitals for symmetry species 4  (A2 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4
+   1 O   :3d2-  -0.0374  -0.0002  -0.0714   1.2060
+   2 O   :3d2-   0.0969  -1.2165   0.8787  -0.7101
+   3 H   :2px   -0.0135  -0.0478  -0.9465  -0.1291
+   4 H   :2px   -1.1137   0.7695   0.0885   0.3340
+
+ Printout of CI-coefficients abs greater than 0.05000 for root  1
+ *** NOTE: this root is the reference state ***
+
+
+  Printout of coefficients in interval   0.3162E+00 to  0.1000E+01
+  ==============================================================
+
+ Coefficient of determinant         5 is      0.99981513  9.99815134E-01
+ alpha-string:  1     3
+  beta-string:  1     3
+
+
+  Printout of coefficients in interval   0.1000E+00 to  0.3162E+00
+  ==============================================================
+   ( no coefficients )
+
+
+  Printout of coefficients in interval   0.5000E-01 to  0.1000E+00
+  ==============================================================
+   ( no coefficients )
+
+ Norm of printed part of CI vector ..      0.99963030
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  1.00E+00 )
+
+  10- 1 to 10- 0         1    0.99963030E+00    0.99963030E+00
+  10- 3 to 10- 2        10    0.36966266E-03    0.99999996E+00
+  10- 4 to 10- 3         1    0.30684955E-07    0.99999999E+00
+  10- 5 to 10- 4         2    0.49171589E-08    0.10000000E+01
+  10- 6 to 10- 5         2    0.19107462E-09    0.10000000E+01
+  10- 7 to 10- 6         4    0.89002403E-12    0.10000000E+01
+  Number of coefficients less than 10^-11 times norm is             0
+
+  Total CPU  time used in SIRIUS :   1.51 seconds
+  Total wall time used in SIRIUS :   1.51 seconds
+
+ 
+     Date and time (Linux)  : Fri Aug 10 08:37:45 2018
+     Host name              : s22p26.deic.sdu.dk                      
+
+
+                     .---------------------------------------.
+                     | End of Wave Function Section (SIRIUS) |
+                     `---------------------------------------'
+
+
+
+                 .------------------------------------------------.
+                 | Starting in Dynamic Property Section (RESPONS) |
+                 `------------------------------------------------'
+
+
+ ----------------------------------------------------------------------------------------
+  RESPONSE  -  an MCSCF, MC-srDFT, DFT, SOPPA and SOPPA-srDFT response property program
+ ----------------------------------------------------------------------------------------
+
+srDFT INFO: DFT_SPINDNS set to false for singlet reference.
+
+
+ -------- OUTPUT FROM RESPONSE INPUT PROCESSING --------
+
+
+
+
+ CHANGES OF DEFAULTS FOR RSPINP:
+ -------------------------------
+
+
+ AO-direct Fock matrix calculations.
+
+ Default : Using Fock type decoupling of the two-electron density matrix :
+    Add DV*(FC+FV) instead of DV*FC to E[2] approximate orbital diagonal
+
+
+ Max dimension of reduced space. MAXRM =  2000
+
+
+  Linear Response single residue calculation
+ -------------------------------------------
+
+
+    5 input options by user.
+
+ Print level                                    : IPRPP  =   4
+ Maximum number of iterations for eigenval.eqs. : MAXITP = 100
+ Threshold for convergence of eigenvalue eqs.   : THCPP  = 1.000D-03
+ Maximum iterations in optimal orbital algorithm: MAXITO =   5
+
+ General print level in RESPONS is IPRRSP =         4
+
+     10 Excitation energies are calculated for symmetry no.    1
+
+     10 Excitation energies are calculated for symmetry no.    2
+
+     10 Excitation energies are calculated for symmetry no.    4
+
+ TRACTL_1: Integral transformation abandoned,
+ the required MO integrals are already available.
+
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.000       0.000
+
+ Sorting integrals to Dirac format: Total CPU and WALL times (sec)       0.001       0.001
+
+
+ MCSCF energy         :      -76.360002858803625
+ -- inactive part     :      -81.351119066527488
+ --   active part     :       -4.185464259033981
+ -- nuclear repulsion :        9.176580466757848
+
+
+                      *************************************
+                      *** MC-srDFT response calculation ***
+                      *************************************
+
+ ----------------------------------------------------------------
+ ----- Linear response calculation
+ ----- Symmetry of excitation/property operator(s)    1  ( A1 )
+ ----------------------------------------------------------------
+
+ Number of excitations of this symmetry           10
+ Number of response properties of this symmetry    0
+ Number of C6/C8 properties of this symmetry       0
+
+
+ Perturbation symmetry.     KSYMOP:           1
+ Perturbation spin symmetry.TRPLET:           T
+ Orbital variables.         KZWOPT:          86
+ Configuration variables.   KZCONF:          20
+ Total number of variables. KZVAR :         106
+
+ --- In RSPPP:
+ THCPP, MAXRM          1.00D-03      2000
+ KSYMOP,NGPPP(KSYMOP)         1         0
+ LWRK , LWRK1         319997533 307991533
+  KEXCNV,NSIM,LWRK2           10          10    12006485
+
+
+
+ --- EXCITATION ENERGIES AND TRANSITION MOMENT CALCULATION (MCTDHF) ---
+
+ Operator symmetry = 1  ( A1 ); triplet =   T
+
+           2  START configuration VECTORS USING LOWEST EIGENVALUES OF PHP
+           8  START orbital VECTORS
+
+ ** RSPCTL MICROITERATION NUMBER    1
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.61809D-01  1.26D-02  1.61D-01  7.20D-01    3.36103D-01
+         2    8.66672D-02  5.51D-03  8.65D-02  7.07D-01    3.80534D-01
+         3    1.30675D-01  1.28D-02  1.30D-01  7.07D-01    4.53632D-01
+         4    1.63820D-01  8.30D-03  1.64D-01  7.18D-01    5.02783D-01
+         5    6.46029D-02  4.01D-02  5.06D-02  7.07D-01    5.47447D-01
+         6    7.78509D-02  5.57D-03  7.77D-02  7.07D-01    5.75236D-01
+         7    1.76969D-01  1.68D-02  1.76D-01  7.21D-01    6.12691D-01
+         8    8.36092D-02  1.90D-02  8.14D-02  7.07D-01    6.70849D-01
+         9    5.29304D-01  1.43D-02  5.29D-01  9.73D-01    7.60741D-01
+        10    5.35585D-12  5.53D-13  5.33D-12  1.00D+00    7.60806D-01
+
+ ** RSPCTL MICROITERATION NUMBER    2
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    3.55519D-02  1.84D-02  3.04D-02  1.56D+00    3.20020D-01
+         2    1.52958D-02  8.50D-03  1.27D-02  7.17D-01    3.76711D-01
+         3    3.36815D-02  1.82D-02  2.84D-02  1.21D+00    4.44201D-01
+         4    4.15512D-02  1.21D-02  3.98D-02  1.25D+00    4.79392D-01
+         5    5.36801D-02  5.10D-02  1.66D-02  1.62D+00    5.43527D-01
+         6    5.22948D-02  1.15D-02  5.10D-02  1.25D+00    5.61535D-01
+         7    1.76852D-02  8.78D-03  1.54D-02  7.58D-01    5.72162D-01
+         8    5.18753D-02  1.86D-02  4.84D-02  1.25D+00    6.19804D-01
+         9    3.91031D-02  3.29D-02  2.12D-02  1.58D+00    6.62133D-01
+        10    5.43793D-13  5.34D-13  1.03D-13  1.00D+00    7.60806D-01
+
+ ** RSPCTL MICROITERATION NUMBER    3
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.67918D-02  1.36D-02  9.86D-03  1.69D+00    3.19629D-01
+         2    1.06364D-02  2.00D-03  1.04D-02  7.28D-01    3.76481D-01
+         3    2.45878D-02  1.31D-02  2.08D-02  1.30D+00    4.43533D-01
+         4    1.79307D-02  4.06D-03  1.75D-02  1.50D+00    4.78716D-01
+         5    1.43527D-01  3.70D-03  1.43D-01  3.44D+00    5.25683D-01
+         6    2.32595D-02  4.31D-03  2.29D-02  1.60D+00    5.60275D-01
+         7    1.22566D-02  1.09D-03  1.22D-02  7.76D-01    5.71922D-01
+         8    6.49231D-02  1.36D-02  6.35D-02  1.72D+00    6.17592D-01
+         9    2.13305D-01  3.90D-03  2.13D-01  4.12D+00    6.45345D-01
+        10    3.13973D-01  1.10D-02  3.14D-01  6.06D+00    6.95438D-01
+
+ ** RSPCTL MICROITERATION NUMBER    4
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.06870D-02  6.90D-03  8.16D-03  1.72D+00    3.19534D-01
+         2    1.56007D-03  1.07D-03  1.13D-03  7.15D-01    3.76443D-01
+         3    9.97712D-03  8.07D-03  5.87D-03  1.25D+00    4.43301D-01
+         4    3.17668D-03  2.29D-03  2.20D-03  1.46D+00    4.78602D-01
+         5    2.39928D-02  9.81D-04  2.40D-02  1.93D+00    5.15968D-01
+         6    4.76828D-03  2.19D-03  4.23D-03  1.61D+00    5.60135D-01
+         7    2.04345D-03  6.82D-04  1.93D-03  8.15D-01    5.71839D-01
+         8    3.12034D-02  2.59D-03  3.11D-02  1.22D+00    6.09581D-01
+         9    2.69359D-02  7.69D-03  2.58D-02  1.52D+00    6.23558D-01
+        10    2.18776D-02  2.49D-03  2.17D-02  1.62D+00    6.71372D-01
+
+ ** RSPCTL MICROITERATION NUMBER    5
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.35128D-03  2.30D-04  1.33D-03  1.87D+00    3.19457D-01
+         2    1.54055D-04  4.41D-05  1.48D-04  7.18D-01    3.76441D-01
+         3    1.32643D-03  3.36D-04  1.28D-03  1.39D+00    4.43214D-01
+         4    7.01845D-04  2.28D-04  6.64D-04  1.46D+00    4.78596D-01
+         5    3.83031D-03  1.52D-04  3.83D-03  2.22D+00    5.15797D-01
+         6    7.22670D-04  5.48D-04  4.72D-04  1.62D+00    5.60123D-01
+         7    2.45152D-04  8.44D-05  2.30D-04  8.19D-01    5.71838D-01
+         8    4.48955D-03  3.45D-04  4.48D-03  1.46D+00    6.09314D-01
+         9    4.88448D-03  5.21D-04  4.86D-03  2.14D+00    6.23271D-01
+        10    3.13543D-03  2.28D-04  3.13D-03  1.63D+00    6.71224D-01
+
+ ** RSPCTL MICROITERATION NUMBER    6
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    4.43034D-04  2.32D-04  3.77D-04  1.88D+00    3.19456D-01
+         2    6.38883D-05  4.43D-05  4.61D-05  7.18D-01    3.76441D-01
+         3    5.64814D-04  3.39D-04  4.52D-04  1.40D+00    4.43213D-01
+         4    6.66676D-04  2.28D-04  6.27D-04  1.46D+00    4.78596D-01
+         5    5.57198D-04  1.62D-04  5.33D-04  2.25D+00    5.15793D-01
+         6    6.38065D-04  5.47D-04  3.29D-04  1.62D+00    5.60123D-01
+         7    1.33195D-04  8.44D-05  1.03D-04  8.20D-01    5.71838D-01
+         8    8.29235D-04  3.34D-04  7.59D-04  1.49D+00    6.09309D-01
+         9    8.85998D-04  5.36D-04  7.06D-04  2.19D+00    6.23265D-01
+        10    5.85084D-04  2.26D-04  5.40D-04  1.64D+00    6.71222D-01
+
+ *** THE REQUESTED   10 SOLUTION VECTORS CONVERGED
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:  104)
+ RSP solution vector no.    1; norm of residual   2.36D-04
+ RSP solution vector no.    2; norm of residual   8.89D-05
+ RSP solution vector no.    3; norm of residual   4.03D-04
+ RSP solution vector no.    4; norm of residual   4.57D-04
+ RSP solution vector no.    5; norm of residual   2.48D-04
+ RSP solution vector no.    6; norm of residual   3.93D-04
+ RSP solution vector no.    7; norm of residual   1.62D-04
+ RSP solution vector no.    8; norm of residual   5.57D-04
+ RSP solution vector no.    9; norm of residual   4.04D-04
+ RSP solution vector no.   10; norm of residual   3.56D-04
+
+ *** RSPCTL MICROITERATIONS CONVERGED
+
+
+ **************************************************************************************
+ *** @ Excit. operator sym 1 & ref. state sym 1 => excited state symmetry 1  ( A1 ) ***
+ **************************************************************************************
+
+
+
+ @ Excited state no:    1 in symmetry 1  ( A1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.31945640     au
+@                       8.6928508     eV;   70112.574     cm-1;   838.73264     kJ / mol
+
+@ Total energy :       -76.040546     au
+
+ Eigenvector for state no.  1
+
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          33         3(1)   5(1)       -0.5886708315        0.0075673284       -0.8324357149        0.0107009115
+          34         3(1)   6(1)        0.2113249540       -0.0102911955        0.2988332864       -0.0145527147
+          35         3(1)   7(1)       -0.2153360363        0.0081919141       -0.3045053326        0.0115841342
+          36         3(1)   8(1)        0.0668830398       -0.0097676768        0.0945788854       -0.0138124103
+          38         3(1)  10(1)        0.0873498297       -0.0023107812        0.1235208440       -0.0032676612
+
+       81 elements with absolute value ≤ 8.32D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+      Index(conf)                         Z operator          Y operator
+      ----------                      --------------      --------------
+           6                           -0.2093287810        0.0047782586
+           7                            0.0287437150       -0.0097148495
+           9                            0.2093287810       -0.0047782586
+          13                           -0.0287437150        0.0097148495
+
+       16 elements with absolute value ≤ 2.09D-02 are not printed.
+
+ The numbers in parenthesis give the configuration symmetry.
+
+
+  Printout of coefficients in interval   0.9453E-01 to  0.2989E+00
+  ==============================================================
+
+ Coefficient of determinant         6 is     -0.20932878 -2.09328781E-01
+ alpha-string:     2  3
+  beta-string:  1     3
+
+ Coefficient of determinant         9 is      0.20932878  2.09328781E-01
+ alpha-string:  1     3
+  beta-string:     2  3
+
+
+  Printout of coefficients in interval   0.2989E-01 to  0.9453E-01
+  ==============================================================
+   ( no coefficients )
+
+
+  Printout of coefficients in interval   0.2093E-01 to  0.2989E-01
+  ==============================================================
+
+ Coefficient of determinant         7 is      0.02874372  2.87437150E-02
+ alpha-string:  1        4
+  beta-string:  1     3
+
+ Coefficient of determinant        13 is     -0.02874372 -2.87437150E-02
+ alpha-string:  1     3
+  beta-string:  1        4
+
+ Norm of printed part of CI vector ..      0.08928948
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  2.99E-01 )
+
+  10- 1 to 10- 0         2    0.87637077E-01    0.87637077E-01
+  10- 2 to 10- 1         4    0.16955857E-02    0.89332663E-01
+  10- 3 to 10- 2         8    0.22122233E-04    0.89354785E-01
+  Number of coefficients less than 10^-11 times norm is             6
+
+
+ @ Excited state no:    2 in symmetry 1  ( A1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.37644102     au
+@                       10.243481     eV;   82619.253     cm-1;   988.34574     kJ / mol
+
+@ Total energy :       -75.983562     au
+
+ Eigenvector for state no.  2
+
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          61        19(2)  20(2)        0.6941983974       -0.0153108275        0.9817447886       -0.0216527799
+          62        19(2)  21(2)       -0.1064524540        0.0099362776       -0.1505465042        0.0140520186
+
+       84 elements with absolute value ≤ 9.82D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+      Index(conf)                         Z operator          Y operator
+      ----------                      --------------      --------------
+           6                           -0.0039082722        0.0004206926
+           7                            0.0202664075       -0.0047103206
+           9                            0.0039082722       -0.0004206926
+          13                           -0.0202664075        0.0047103206
+
+       16 elements with absolute value ≤ 2.03D-03 are not printed.
+
+ The numbers in parenthesis give the configuration symmetry.
+
+
+  Printout of coefficients in interval   0.9243E-02 to  0.2923E-01
+  ==============================================================
+
+ Coefficient of determinant         7 is      0.02026641  2.02664075E-02
+ alpha-string:  1        4
+  beta-string:  1     3
+
+ Coefficient of determinant        13 is     -0.02026641 -2.02664075E-02
+ alpha-string:  1     3
+  beta-string:  1        4
+
+
+  Printout of coefficients in interval   0.2923E-02 to  0.9243E-02
+  ==============================================================
+
+ Coefficient of determinant         6 is     -0.00390827 -3.90827215E-03
+ alpha-string:     2  3
+  beta-string:  1     3
+
+ Coefficient of determinant         9 is      0.00390827  3.90827215E-03
+ alpha-string:  1     3
+  beta-string:     2  3
+
+
+  Printout of coefficients in interval   0.2027E-02 to  0.2923E-02
+  ==============================================================
+   ( no coefficients )
+
+ Norm of printed part of CI vector ..      0.00085200
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  2.92E-02 )
+
+  10- 1 to 10- 0         4    0.85200373E-03    0.85200373E-03
+  10- 2 to 10- 1         4    0.21432213E-05    0.85414695E-03
+  10- 3 to 10- 2         6    0.13276403E-06    0.85427971E-03
+  Number of coefficients less than 10^-11 times norm is             6
+
+
+ @ Excited state no:    3 in symmetry 1  ( A1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.44321287     au
+@                       12.060436     eV;   97273.980     cm-1;   1163.6552     kJ / mol
+
+@ Total energy :       -75.916790     au
+
+ Eigenvector for state no.  3
+
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          33         3(1)   5(1)        0.1904408599        0.0041442132        0.2693012204        0.0058603058
+          34         3(1)   6(1)        0.6337543743       -0.0108755621        0.8961880689       -0.0153790639
+          35         3(1)   7(1)        0.1516129497       -0.0003344046        0.2143949173       -0.0004728794
+          36         3(1)   8(1)        0.1548555249       -0.0112739409        0.2189802224       -0.0159424088
+
+       82 elements with absolute value ≤ 8.96D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+      Index(conf)                         Z operator          Y operator
+      ----------                      --------------      --------------
+           7                            0.0449862501       -0.0074432725
+           8                            0.0055478656       -0.0020067322
+          13                           -0.0449862501        0.0074432725
+          17                           -0.0055478656        0.0020067322
+
+       16 elements with absolute value ≤ 4.50D-03 are not printed.
+
+ The numbers in parenthesis give the configuration symmetry.
+
+
+  Printout of coefficients in interval   0.2047E-01 to  0.6473E-01
+  ==============================================================
+
+ Coefficient of determinant         7 is      0.04498625  4.49862501E-02
+ alpha-string:  1        4
+  beta-string:  1     3
+
+ Coefficient of determinant        13 is     -0.04498625 -4.49862501E-02
+ alpha-string:  1     3
+  beta-string:  1        4
+
+
+  Printout of coefficients in interval   0.6473E-02 to  0.2047E-01
+  ==============================================================
+   ( no coefficients )
+
+
+  Printout of coefficients in interval   0.4499E-02 to  0.6473E-02
+  ==============================================================
+
+ Coefficient of determinant         8 is      0.00554787  5.54786561E-03
+ alpha-string:     2     4
+  beta-string:  1     3
+
+ Coefficient of determinant        17 is     -0.00554787 -5.54786561E-03
+ alpha-string:  1     3
+  beta-string:     2     4
+
+ Norm of printed part of CI vector ..      0.00410908
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  6.47E-02 )
+
+  10- 1 to 10- 0         2    0.40475254E-02    0.40475254E-02
+  10- 2 to 10- 1         8    0.14209686E-03    0.41896223E-02
+  10- 3 to 10- 2         2    0.22411215E-06    0.41898464E-02
+  10- 4 to 10- 3         2    0.14849206E-08    0.41898478E-02
+  Number of coefficients less than 10^-11 times norm is             6
+
+
+ @ Excited state no:    4 in symmetry 1  ( A1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.47859573     au
+@                       13.023252     eV;   105039.62     cm-1;   1256.5529     kJ / mol
+
+@ Total energy :       -75.881407     au
+
+ Eigenvector for state no.  4
+
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          33         3(1)   5(1)       -0.3312673504       -0.0030343758       -0.4684430736       -0.0042908918
+          35         3(1)   7(1)        0.5241140930       -0.0064972765        0.7411464376       -0.0091877578
+          36         3(1)   8(1)       -0.0842362262        0.0023758393       -0.1191179170        0.0033596594
+          38         3(1)  10(1)       -0.1287206225        0.0012443249       -0.1820230216        0.0017595920
+          39         3(1)  11(1)       -0.0834548702        0.0042628316       -0.1180130063        0.0060280433
+
+       81 elements with absolute value ≤ 7.41D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+      Index(conf)                         Z operator          Y operator
+      ----------                      --------------      --------------
+           6                            0.2716160236       -0.0047400497
+           7                           -0.0601297276        0.0081555097
+           9                           -0.2716160236        0.0047400497
+          13                            0.0601297276       -0.0081555097
+
+       16 elements with absolute value ≤ 2.72D-02 are not printed.
+
+ The numbers in parenthesis give the configuration symmetry.
+
+
+  Printout of coefficients in interval   0.1244E+00 to  0.3935E+00
+  ==============================================================
+
+ Coefficient of determinant         6 is      0.27161602  2.71616024E-01
+ alpha-string:     2  3
+  beta-string:  1     3
+
+ Coefficient of determinant         9 is     -0.27161602 -2.71616024E-01
+ alpha-string:  1     3
+  beta-string:     2  3
+
+
+  Printout of coefficients in interval   0.3935E-01 to  0.1244E+00
+  ==============================================================
+
+ Coefficient of determinant         7 is     -0.06012973 -6.01297276E-02
+ alpha-string:  1        4
+  beta-string:  1     3
+
+ Coefficient of determinant        13 is      0.06012973  6.01297276E-02
+ alpha-string:  1     3
+  beta-string:  1        4
+
+
+  Printout of coefficients in interval   0.2716E-01 to  0.3935E-01
+  ==============================================================
+   ( no coefficients )
+
+ Norm of printed part of CI vector ..      0.15478170
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  3.94E-01 )
+
+  10- 1 to 10- 0         4    0.15478170E+00    0.15478170E+00
+  10- 2 to 10- 1         2    0.40986608E-04    0.15482268E+00
+  10- 3 to 10- 2         8    0.25496117E-04    0.15484818E+00
+  Number of coefficients less than 10^-11 times norm is             6
+
+
+ @ Excited state no:    5 in symmetry 1  ( A1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.51579311     au
+@                       14.035444     eV;   113203.50     cm-1;   1354.2146     kJ / mol
+
+@ Total energy :       -75.844210     au
+
+ Eigenvector for state no.  5
+
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          34         3(1)   6(1)       -0.0812525617       -0.0035222343       -0.1148987357       -0.0049807693
+          35         3(1)   7(1)        0.0754191437        0.0011142666        0.1066497361        0.0015756774
+          67        26(3)  28(3)       -0.5344759959        0.0023933883       -0.7557875253        0.0033844234
+          68        26(3)  29(3)       -0.2379010303        0.0073942898       -0.3364091789        0.0104560579
+          69        26(3)  30(3)       -0.0918721664        0.0042107536       -0.1299138555        0.0059543087
+          70        26(3)  31(3)        0.1000841373        0.0039606058        0.1415261734        0.0056005816
+          71        26(3)  32(3)        0.0969020979       -0.0064439991        0.1370265406       -0.0091122785
+
+       79 elements with absolute value ≤ 7.56D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+      Index(conf)                         Z operator          Y operator
+      ----------                      --------------      --------------
+           7                            0.3276700699       -0.0153423248
+          13                           -0.3276700699        0.0153423248
+
+       18 elements with absolute value ≤ 3.28D-02 are not printed.
+
+ The numbers in parenthesis give the configuration symmetry.
+
+
+  Printout of coefficients in interval   0.1466E+00 to  0.4637E+00
+  ==============================================================
+
+ Coefficient of determinant         7 is      0.32767007  3.27670070E-01
+ alpha-string:  1        4
+  beta-string:  1     3
+
+ Coefficient of determinant        13 is     -0.32767007 -3.27670070E-01
+ alpha-string:  1     3
+  beta-string:  1        4
+
+
+  Printout of coefficients in interval   0.4637E-01 to  0.1466E+00
+  ==============================================================
+   ( no coefficients )
+
+
+  Printout of coefficients in interval   0.3277E-01 to  0.4637E-01
+  ==============================================================
+   ( no coefficients )
+
+ Norm of printed part of CI vector ..      0.21473535
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  4.64E-01 )
+
+  10- 1 to 10- 0         2    0.21473535E+00    0.21473535E+00
+  10- 2 to 10- 1         4    0.25494581E-03    0.21499030E+00
+  10- 3 to 10- 2         6    0.51186384E-04    0.21504148E+00
+  10- 4 to 10- 3         2    0.35294104E-06    0.21504183E+00
+  Number of coefficients less than 10^-11 times norm is             6
+
+
+ @ Excited state no:    6 in symmetry 1  ( A1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.56012301     au
+@                       15.241723     eV;   122932.79     cm-1;   1470.6027     kJ / mol
+
+@ Total energy :       -75.799880     au
+
+ Eigenvector for state no.  6
+
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          33         3(1)   5(1)        0.0390634307       -0.0019547243        0.0552393513       -0.0027641633
+          34         3(1)   6(1)       -0.1340859107        0.0000814142       -0.1896100417        0.0001151273
+          35         3(1)   7(1)        0.3495238525       -0.0041445144        0.4942594783       -0.0058607317
+          36         3(1)   8(1)        0.2322987265       -0.0009983125        0.3284921660       -0.0014117074
+          37         3(1)   9(1)       -0.2012569713        0.0010817913       -0.2845962154        0.0015297543
+          38         3(1)  10(1)        0.1813841853        0.0025160989        0.2564942339        0.0035579995
+          39         3(1)  11(1)        0.0990496470        0.0011486695        0.1400654819        0.0016243263
+          40         3(1)  12(1)       -0.0402368852        0.0021002593       -0.0568987259        0.0029699634
+          62        19(2)  21(2)        0.1763970024       -0.0045643515        0.2494630332       -0.0064549678
+          67        26(3)  28(3)        0.0695526297       -0.0000749304        0.0983524243       -0.0001059570
+
+       76 elements with absolute value ≤ 4.94D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+      Index(conf)                         Z operator          Y operator
+      ----------                      --------------      --------------
+           6                           -0.4207293353        0.0049781785
+           9                            0.4207293353       -0.0049781785
+
+       18 elements with absolute value ≤ 4.21D-02 are not printed.
+
+ The numbers in parenthesis give the configuration symmetry.
+
+
+  Printout of coefficients in interval   0.1883E+00 to  0.5953E+00
+  ==============================================================
+
+ Coefficient of determinant         6 is     -0.42072934 -4.20729335E-01
+ alpha-string:     2  3
+  beta-string:  1     3
+
+ Coefficient of determinant         9 is      0.42072934  4.20729335E-01
+ alpha-string:  1     3
+  beta-string:     2  3
+
+
+  Printout of coefficients in interval   0.5953E-01 to  0.1883E+00
+  ==============================================================
+   ( no coefficients )
+
+
+  Printout of coefficients in interval   0.4207E-01 to  0.5953E-01
+  ==============================================================
+   ( no coefficients )
+
+ Norm of printed part of CI vector ..      0.35402635
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  5.95E-01 )
+
+  10- 1 to 10- 0         2    0.35402635E+00    0.35402635E+00
+  10- 2 to 10- 1         6    0.34551984E-03    0.35437187E+00
+  10- 3 to 10- 2         6    0.43931153E-04    0.35441580E+00
+  Number of coefficients less than 10^-11 times norm is             6
+
+
+ @ Excited state no:    7 in symmetry 1  ( A1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.57183763     au
+@                       15.560493     eV;   125503.85     cm-1;   1501.3595     kJ / mol
+
+@ Total energy :       -75.788165     au
+
+ Eigenvector for state no.  7
+
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          35         3(1)   7(1)       -0.0842711233       -0.0010870312       -0.1191672647       -0.0015371639
+          36         3(1)   8(1)       -0.0909236880        0.0010623762       -0.1285746145        0.0015022996
+          61        19(2)  20(2)        0.1051622444        0.0059878362        0.1487218722        0.0084680792
+          62        19(2)  21(2)        0.6653681029       -0.0087748643        0.9409725951       -0.0124095321
+          67        26(3)  28(3)       -0.1164517872       -0.0004050114       -0.1646712084       -0.0005727152
+
+       81 elements with absolute value ≤ 9.41D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+      Index(conf)                         Z operator          Y operator
+      ----------                      --------------      --------------
+           6                            0.0849666510       -0.0003455889
+           7                           -0.0378466937        0.0053595490
+           9                           -0.0849666510        0.0003455889
+          13                            0.0378466937       -0.0053595490
+
+       16 elements with absolute value ≤ 8.50D-03 are not printed.
+
+ The numbers in parenthesis give the configuration symmetry.
+
+
+  Printout of coefficients in interval   0.4161E-01 to  0.1316E+00
+  ==============================================================
+
+ Coefficient of determinant         6 is      0.08496665  8.49666510E-02
+ alpha-string:     2  3
+  beta-string:  1     3
+
+ Coefficient of determinant         9 is     -0.08496665 -8.49666510E-02
+ alpha-string:  1     3
+  beta-string:     2  3
+
+
+  Printout of coefficients in interval   0.1316E-01 to  0.4161E-01
+  ==============================================================
+
+ Coefficient of determinant         7 is     -0.03784669 -3.78466937E-02
+ alpha-string:  1        4
+  beta-string:  1     3
+
+ Coefficient of determinant        13 is      0.03784669  3.78466937E-02
+ alpha-string:  1     3
+  beta-string:  1        4
+
+
+  Printout of coefficients in interval   0.8497E-02 to  0.1316E-01
+  ==============================================================
+   ( no coefficients )
+
+ Norm of printed part of CI vector ..      0.01730341
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  1.32E-01 )
+
+  10- 1 to 10- 0         4    0.17303408E-01    0.17303408E-01
+  10- 2 to 10- 1         4    0.10316730E-04    0.17313725E-01
+  10- 3 to 10- 2         6    0.41298518E-05    0.17317855E-01
+  Number of coefficients less than 10^-11 times norm is             6
+
+
+ @ Excited state no:    8 in symmetry 1  ( A1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.60930896     au
+@                       16.580140     eV;   133727.86     cm-1;   1599.7404     kJ / mol
+
+@ Total energy :       -75.750694     au
+
+ Eigenvector for state no.  8
+
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          34         3(1)   6(1)        0.0871884264        0.0072766005        0.1232926046        0.0102897950
+          35         3(1)   7(1)        0.0554260294       -0.0037412538        0.0783775990       -0.0052904834
+          36         3(1)   8(1)       -0.3269792265        0.0101755883       -0.4623792646        0.0143892353
+          37         3(1)   9(1)       -0.1072930672        0.0046473084       -0.1517224505        0.0065717296
+          38         3(1)  10(1)        0.1123923830       -0.0006228148        0.1589333609       -0.0008807185
+          62        19(2)  21(2)       -0.0999667294       -0.0008213523       -0.1413743045       -0.0011615675
+          67        26(3)  28(3)       -0.3574414444       -0.0009932969       -0.5054479280       -0.0014045932
+          68        26(3)  29(3)        0.0930959174       -0.0048423031        0.1316443275       -0.0068473651
+          69        26(3)  30(3)        0.0876637116       -0.0015542257        0.1239627975       -0.0021977870
+          70        26(3)  31(3)       -0.1250600313       -0.0042537091       -0.1768438850       -0.0060150508
+          71        26(3)  32(3)       -0.1043673640        0.0041692573       -0.1475829641        0.0058956298
+          72        26(3)  33(3)        0.0605343362       -0.0074708810        0.0855999081       -0.0105643635
+
+       74 elements with absolute value ≤ 5.05D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+      Index(conf)                         Z operator          Y operator
+      ----------                      --------------      --------------
+           6                           -0.1586465436       -0.0032010667
+           7                           -0.3795429930        0.0168878658
+           9                            0.1586465436        0.0032010667
+          13                            0.3795429930       -0.0168878658
+
+       16 elements with absolute value ≤ 3.80D-02 are not printed.
+
+ The numbers in parenthesis give the configuration symmetry.
+
+
+  Printout of coefficients in interval   0.1840E+00 to  0.5819E+00
+  ==============================================================
+
+ Coefficient of determinant         7 is     -0.37954299 -3.79542993E-01
+ alpha-string:  1        4
+  beta-string:  1     3
+
+ Coefficient of determinant        13 is      0.37954299  3.79542993E-01
+ alpha-string:  1     3
+  beta-string:  1        4
+
+
+  Printout of coefficients in interval   0.5819E-01 to  0.1840E+00
+  ==============================================================
+
+ Coefficient of determinant         6 is     -0.15864654 -1.58646544E-01
+ alpha-string:     2  3
+  beta-string:  1     3
+
+ Coefficient of determinant         9 is      0.15864654  1.58646544E-01
+ alpha-string:  1     3
+  beta-string:     2  3
+
+
+  Printout of coefficients in interval   0.3795E-01 to  0.5819E-01
+  ==============================================================
+   ( no coefficients )
+
+ Norm of printed part of CI vector ..      0.33844322
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  5.82E-01 )
+
+  10- 1 to 10- 0         4    0.33844322E+00    0.33844322E+00
+  10- 2 to 10- 1         2    0.12326512E-03    0.33856648E+00
+  10- 3 to 10- 2         4    0.44556948E-04    0.33861104E+00
+  10- 4 to 10- 3         4    0.12563178E-05    0.33861230E+00
+  Number of coefficients less than 10^-11 times norm is             6
+
+
+ @ Excited state no:    9 in symmetry 1  ( A1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.62326528     au
+@                       16.959911     eV;   136790.92     cm-1;   1636.3827     kJ / mol
+
+@ Total energy :       -75.736738     au
+
+ Eigenvector for state no.  9
+
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          34         3(1)   6(1)       -0.0940867138       -0.0042204784       -0.1330474294       -0.0059681519
+          35         3(1)   7(1)       -0.0664848681        0.0003790866       -0.0940158333        0.0005360640
+          36         3(1)   8(1)        0.5309381257       -0.0050744338        0.7507962592       -0.0071757249
+          37         3(1)   9(1)        0.0869773130       -0.0016642180        0.1229940705       -0.0023533602
+          38         3(1)  10(1)       -0.0988216514       -0.0007603145       -0.1397430747       -0.0010751560
+          67        26(3)  28(3)       -0.2291810063       -0.0006532502       -0.3240784375       -0.0009237428
+          68        26(3)  29(3)        0.0970482752       -0.0024021106        0.1372332458       -0.0033967573
+          69        26(3)  30(3)        0.0762644107       -0.0017836905        0.1078433656       -0.0025222668
+          70        26(3)  31(3)       -0.1009851250       -0.0022666547       -0.1428002348       -0.0032052128
+          71        26(3)  32(3)       -0.0781734955        0.0017999495       -0.1105429489        0.0025452581
+
+       76 elements with absolute value ≤ 7.51D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+      Index(conf)                         Z operator          Y operator
+      ----------                      --------------      --------------
+           6                            0.1348635348       -0.0047748899
+           7                           -0.2801184427        0.0060869941
+           9                           -0.1348635348        0.0047748899
+          13                            0.2801184427       -0.0060869941
+
+       16 elements with absolute value ≤ 2.80D-02 are not printed.
+
+ The numbers in parenthesis give the configuration symmetry.
+
+
+  Printout of coefficients in interval   0.1391E+00 to  0.4398E+00
+  ==============================================================
+
+ Coefficient of determinant         7 is     -0.28011844 -2.80118443E-01
+ alpha-string:  1        4
+  beta-string:  1     3
+
+ Coefficient of determinant        13 is      0.28011844  2.80118443E-01
+ alpha-string:  1     3
+  beta-string:  1        4
+
+
+  Printout of coefficients in interval   0.4398E-01 to  0.1391E+00
+  ==============================================================
+
+ Coefficient of determinant         6 is      0.13486353  1.34863535E-01
+ alpha-string:     2  3
+  beta-string:  1     3
+
+ Coefficient of determinant         9 is     -0.13486353 -1.34863535E-01
+ alpha-string:  1     3
+  beta-string:     2  3
+
+
+  Printout of coefficients in interval   0.2801E-01 to  0.4398E-01
+  ==============================================================
+   ( no coefficients )
+
+ Norm of printed part of CI vector ..      0.19330903
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  4.40E-01 )
+
+  10- 1 to 10- 0         4    0.19330903E+00    0.19330903E+00
+  10- 2 to 10- 1         2    0.11356984E-03    0.19342260E+00
+  10- 3 to 10- 2         8    0.25873800E-04    0.19344847E+00
+  Number of coefficients less than 10^-11 times norm is             6
+
+
+ @ Excited state no:   10 in symmetry 1  ( A1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.67122213     au
+@                       18.264883     eV;   147316.23     cm-1;   1762.2934     kJ / mol
+
+@ Total energy :       -75.688781     au
+
+ Eigenvector for state no. 10
+
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          67        26(3)  28(3)       -0.1158633490       -0.0012010946       -0.1638391144       -0.0016984342
+          68        26(3)  29(3)        0.6395561737       -0.0025390940        0.9043784595       -0.0035904617
+          70        26(3)  31(3)        0.1498248481       -0.0000570842        0.2118631184       -0.0000807211
+
+       83 elements with absolute value ≤ 9.04D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+      Index(conf)                         Z operator          Y operator
+      ----------                      --------------      --------------
+           7                            0.2299564129       -0.0013727924
+          13                           -0.2299564129        0.0013727924
+
+       18 elements with absolute value ≤ 2.30D-02 are not printed.
+
+ The numbers in parenthesis give the configuration symmetry.
+
+
+  Printout of coefficients in interval   0.1029E+00 to  0.3255E+00
+  ==============================================================
+
+ Coefficient of determinant         7 is      0.22995641  2.29956413E-01
+ alpha-string:  1        4
+  beta-string:  1     3
+
+ Coefficient of determinant        13 is     -0.22995641 -2.29956413E-01
+ alpha-string:  1     3
+  beta-string:  1        4
+
+
+  Printout of coefficients in interval   0.3255E-01 to  0.1029E+00
+  ==============================================================
+   ( no coefficients )
+
+
+  Printout of coefficients in interval   0.2300E-01 to  0.3255E-01
+  ==============================================================
+   ( no coefficients )
+
+ Norm of printed part of CI vector ..      0.10575990
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  3.26E-01 )
+
+  10- 1 to 10- 0         2    0.10575990E+00    0.10575990E+00
+  10- 2 to 10- 1         4    0.19211148E-03    0.10595202E+00
+  10- 3 to 10- 2         6    0.19188822E-04    0.10597120E+00
+  10- 4 to 10- 3         2    0.80834919E-07    0.10597128E+00
+  Number of coefficients less than 10^-11 times norm is             6
+
+
+ Time used in polarization propagator calculation is      6.13 CPU seconds for symmetry 1
+ ----------------------------------------------------------------
+ ----- Linear response calculation
+ ----- Symmetry of excitation/property operator(s)    2  ( B1 )
+ ----------------------------------------------------------------
+
+ Number of excitations of this symmetry           10
+ Number of response properties of this symmetry    0
+ Number of C6/C8 properties of this symmetry       0
+
+
+ Perturbation symmetry.     KSYMOP:           2
+ Perturbation spin symmetry.TRPLET:           T
+ Orbital variables.         KZWOPT:          48
+ Configuration variables.   KZCONF:           0
+ Total number of variables. KZVAR :          48
+
+ --- In RSPPP:
+ THCPP, MAXRM          1.00D-03      2000
+ KSYMOP,NGPPP(KSYMOP)         2         0
+ LWRK , LWRK1         319997533 307991533
+  KEXCNV,NSIM,LWRK2           10          10    12006293
+
+
+
+ --- EXCITATION ENERGIES AND TRANSITION MOMENT CALCULATION (MCTDHF) ---
+
+ Operator symmetry = 2  ( B1 ); triplet =   T
+
+           0  START configuration VECTORS USING LOWEST DIAGONAL HESSIAN ELEMENTS
+          10  START orbital VECTORS
+
+ ** RSPCTL MICROITERATION NUMBER    1
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.31621D-01  0.00D+00  1.32D-01  7.07D-01    2.49746D-01
+         2    5.36688D-02  0.00D+00  5.37D-02  7.07D-01    3.78271D-01
+         3    1.50319D-01  0.00D+00  1.50D-01  7.07D-01    4.16555D-01
+         4    1.18951D-01  0.00D+00  1.19D-01  7.07D-01    4.71669D-01
+         5    2.79482D-01  0.00D+00  2.79D-01  7.07D-01    5.16151D-01
+         6    2.07251D-01  0.00D+00  2.07D-01  7.07D-01    5.54655D-01
+         7    1.13560D-01  0.00D+00  1.14D-01  7.07D-01    6.60755D-01
+         8    7.94260D-02  0.00D+00  7.94D-02  7.07D-01    7.53068D-01
+         9    1.24499D-01  0.00D+00  1.24D-01  7.07D-01    7.62814D-01
+        10    2.49406D-01  0.00D+00  2.49D-01  7.07D-01    1.03275D+00
+
+ ** RSPCTL MICROITERATION NUMBER    2
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    6.14523D-03  0.00D+00  6.15D-03  7.89D-01    2.43400D-01
+         2    5.60096D-03  0.00D+00  5.60D-03  8.28D-01    3.77114D-01
+         3    7.07965D-03  0.00D+00  7.08D-03  7.14D-01    4.04533D-01
+         4    2.08690D-02  0.00D+00  2.09D-02  1.09D+00    4.64394D-01
+         5    9.60655D-03  0.00D+00  9.61D-03  7.33D-01    4.86099D-01
+         6    6.60448D-03  0.00D+00  6.60D-03  8.78D-01    5.48049D-01
+         7    3.21911D-02  0.00D+00  3.22D-02  1.44D+00    6.54104D-01
+         8    1.06293D-02  0.00D+00  1.06D-02  1.67D+00    7.48122D-01
+         9    1.19959D-02  0.00D+00  1.20D-02  9.65D-01    7.56306D-01
+        10    5.68482D-02  0.00D+00  5.68D-02  7.39D-01    9.59859D-01
+
+ ** RSPCTL MICROITERATION NUMBER    3
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.07385D-02  0.00D+00  1.07D-02  1.14D+00    2.43327D-01
+         2    1.65432D-02  0.00D+00  1.65D-02  1.47D+00    3.76980D-01
+         3    1.17152D-03  0.00D+00  1.17D-03  7.19D-01    4.04521D-01
+         4    8.29222D-03  0.00D+00  8.29D-03  1.57D+00    4.64272D-01
+         5    2.03940D-03  0.00D+00  2.04D-03  7.94D-01    4.86074D-01
+         6    2.50839D-02  0.00D+00  2.51D-02  1.94D+00    5.47824D-01
+         7    1.60559D-02  0.00D+00  1.61D-02  2.70D+00    6.53706D-01
+         8    8.44630D-03  0.00D+00  8.45D-03  2.24D+00    7.47999D-01
+         9    3.32473D-03  0.00D+00  3.32D-03  1.21D+00    7.56259D-01
+        10    1.00794D-02  0.00D+00  1.01D-02  8.66D-01    9.58973D-01
+
+ ** RSPCTL MICROITERATION NUMBER    4
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    2.30893D-04  0.00D+00  2.31D-04  1.28D+00    2.43314D-01
+         2    4.00064D-04  0.00D+00  4.00D-04  1.75D+00    3.76946D-01
+         3    3.25184D-05  0.00D+00  3.25D-05  7.23D-01    4.04521D-01
+         4    1.97945D-04  0.00D+00  1.98D-04  1.63D+00    4.64263D-01
+         5    6.24251D-05  0.00D+00  6.24D-05  8.03D-01    4.86073D-01
+         6    7.66488D-04  0.00D+00  7.66D-04  2.63D+00    5.47731D-01
+         7    4.79863D-04  0.00D+00  4.80D-04  2.87D+00    6.53674D-01
+         8    4.02884D-04  0.00D+00  4.03D-04  2.35D+00    7.47987D-01
+         9    1.57044D-04  0.00D+00  1.57D-04  1.24D+00    7.56257D-01
+        10    2.46099D-02  0.00D+00  2.46D-02  6.60D+01    8.65804D-01
+
+ *** THE REQUESTED   10 SOLUTION VECTORS CONVERGED
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:   80)
+ RSP solution vector no.    1; norm of residual   1.81D-04
+ RSP solution vector no.    2; norm of residual   2.28D-04
+ RSP solution vector no.    3; norm of residual   4.50D-05
+ RSP solution vector no.    4; norm of residual   1.21D-04
+ RSP solution vector no.    5; norm of residual   7.78D-05
+ RSP solution vector no.    6; norm of residual   2.92D-04
+ RSP solution vector no.    7; norm of residual   1.67D-04
+ RSP solution vector no.    8; norm of residual   1.71D-04
+ RSP solution vector no.    9; norm of residual   1.27D-04
+ RSP solution vector no.   10; norm of residual   3.73D-04
+
+ *** RSPCTL MICROITERATIONS CONVERGED
+
+
+ **************************************************************************************
+ *** @ Excit. operator sym 2 & ref. state sym 1 => excited state symmetry 2  ( B1 ) ***
+ **************************************************************************************
+
+
+
+ @ Excited state no:    1 in symmetry 2  ( B1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.24331393     au
+@                       6.6209088     eV;   53401.235     cm-1;   638.82063     kJ / mol
+
+@ Total energy :       -76.116689     au
+
+ Eigenvector for state no.  1
+
+     Response orbital operator symmetry = 2
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          26        19(2)   4(1)       -0.2101172910        0.0069361051       -0.2971260766        0.0098083204
+          27        19(2)   5(1)       -0.5939788076        0.0072482581       -0.8400128854        0.0102505848
+          28        19(2)   6(1)        0.2115323134       -0.0077056167        0.2991518665       -0.0108973876
+          29        19(2)   7(1)       -0.2113611803        0.0077978567       -0.2989098477        0.0110278348
+          32        19(2)  10(1)        0.0904882176       -0.0047785391        0.1279696646       -0.0067578748
+
+       43 elements with absolute value ≤ 8.40D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 2
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    2 in symmetry 2  ( B1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.37694597     au
+@                       10.257222     eV;   82730.078     cm-1;   989.67150     kJ / mol
+
+@ Total energy :       -75.983057     au
+
+ Eigenvector for state no.  2
+
+     Response orbital operator symmetry = 2
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          27        19(2)   5(1)        0.2188439932        0.0024888479        0.3094921432        0.0035197625
+          28        19(2)   6(1)        0.6485369931       -0.0051973233        0.9171698113       -0.0073501251
+          29        19(2)   7(1)        0.0875750268        0.0008481675        0.1238497906        0.0011994900
+          30        19(2)   8(1)        0.1360831085       -0.0043577730        0.1924505777       -0.0061628217
+
+       44 elements with absolute value ≤ 9.17D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 2
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    3 in symmetry 2  ( B1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.40452095     au
+@                       11.007575     eV;   88782.085     cm-1;   1062.0696     kJ / mol
+
+@ Total energy :       -75.955482     au
+
+ Eigenvector for state no.  3
+
+     Response orbital operator symmetry = 2
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          26        19(2)   4(1)       -0.2871433134        0.0053069183       -0.4060482872        0.0075044933
+          27        19(2)   5(1)        0.3082503315        0.0023756670        0.4359317993        0.0033597005
+          28        19(2)   6(1)       -0.0536693689       -0.0015757168       -0.0758999494       -0.0022284000
+          29        19(2)   7(1)       -0.5327561253        0.0046126889       -0.7534309379        0.0065233272
+          30        19(2)   8(1)        0.0755262557       -0.0007823421        0.1068102551       -0.0011063988
+          32        19(2)  10(1)        0.1374482307       -0.0015124358        0.1943811520       -0.0021389072
+          33        19(2)  11(1)        0.0854211744       -0.0031404950        0.1208037834       -0.0044413306
+
+       41 elements with absolute value ≤ 7.53D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 2
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    4 in symmetry 2  ( B1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.46426295     au
+@                       12.633237     eV;   101893.94     cm-1;   1218.9222     kJ / mol
+
+@ Total energy :       -75.895740     au
+
+ Eigenvector for state no.  4
+
+     Response orbital operator symmetry = 2
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          13         3(1)  20(2)       -0.6813461877        0.0035051469       -0.9634873523        0.0049566062
+          14         3(1)  21(2)        0.0789238758       -0.0024246847        0.1116057557       -0.0034287313
+          26        19(2)   4(1)        0.0780265782       -0.0008750072        0.1103370929       -0.0012373444
+          28        19(2)   6(1)        0.0741099469        0.0048186893        0.1048072920        0.0068146558
+          30        19(2)   8(1)       -0.0932251638        0.0061123995       -0.1318402910        0.0086442382
+
+       43 elements with absolute value ≤ 9.63D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 2
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    5 in symmetry 2  ( B1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.48607340     au
+@                       13.226730     eV;   106680.78     cm-1;   1276.1855     kJ / mol
+
+@ Total energy :       -75.873929     au
+
+ Eigenvector for state no.  5
+
+     Response orbital operator symmetry = 2
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          13         3(1)  20(2)       -0.1387636492       -0.0012675781       -0.1962248023       -0.0017924742
+          26        19(2)   4(1)       -0.4038140329        0.0032652160       -0.5710319161        0.0046173298
+          28        19(2)   6(1)       -0.1115286569        0.0017557813       -0.1577253391        0.0024830497
+          29        19(2)   7(1)        0.3755802076       -0.0022857319        0.5311506233       -0.0032325131
+          30        19(2)   8(1)        0.2804501872       -0.0041715502        0.3966164583       -0.0058994628
+          31        19(2)   9(1)       -0.2012226822        0.0015824105       -0.2845718462        0.0022378663
+          32        19(2)  10(1)        0.1684259629        0.0037764277        0.2381902810        0.0053406752
+          33        19(2)  11(1)        0.1065430464       -0.0039232183        0.1506746212       -0.0055482685
+
+       40 elements with absolute value ≤ 5.71D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 2
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    6 in symmetry 2  ( B1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.54773120     au
+@                       14.904524     eV;   120213.10     cm-1;   1438.0680     kJ / mol
+
+@ Total energy :       -75.812272     au
+
+ Eigenvector for state no.  6
+
+     Response orbital operator symmetry = 2
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          26        19(2)   4(1)       -0.2214454420       -0.0002373718       -0.3131451727       -0.0003356666
+          28        19(2)   6(1)        0.0944709901        0.0009401194        0.1336021554        0.0013295297
+          29        19(2)   7(1)        0.1079931103        0.0013078962        0.1527253212        0.0018496445
+          30        19(2)   8(1)       -0.6145786067        0.0066251185       -0.8691454008        0.0093693324
+          31        19(2)   9(1)       -0.1345146097       -0.0000369924       -0.1902323853       -0.0000523152
+          32        19(2)  10(1)        0.1657802868       -0.0030816099        0.2344487299       -0.0043580545
+
+       42 elements with absolute value ≤ 8.69D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 2
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    7 in symmetry 2  ( B1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.65367364     au
+@                       17.787365     eV;   143464.78     cm-1;   1716.2199     kJ / mol
+
+@ Total energy :       -75.706329     au
+
+ Eigenvector for state no.  7
+
+     Response orbital operator symmetry = 2
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          13         3(1)  20(2)       -0.0806281723       -0.0016149919       -0.1140157906       -0.0022837499
+          14         3(1)  21(2)       -0.6967790422        0.0056403787       -0.9853108547        0.0079760241
+
+       46 elements with absolute value ≤ 9.85D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 2
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    8 in symmetry 2  ( B1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.74798654     au
+@                       20.353749     eV;   164164.07     cm-1;   1963.8383     kJ / mol
+
+@ Total energy :       -75.612016     au
+
+ Eigenvector for state no.  8
+
+     Response orbital operator symmetry = 2
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          31        19(2)   9(1)        0.2731313038       -0.0032456936        0.3862659942       -0.0045901040
+          32        19(2)  10(1)        0.0890840707       -0.0028306640        0.1259839010       -0.0040031634
+          41        26(3)  38(4)        0.6380199681       -0.0053815983        0.9022061542       -0.0076099673
+
+       45 elements with absolute value ≤ 9.02D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 2
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    9 in symmetry 2  ( B1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.75625706     au
+@                       20.578801     eV;   165979.24     cm-1;   1985.5526     kJ / mol
+
+@ Total energy :       -75.603746     au
+
+ Eigenvector for state no.  9
+
+     Response orbital operator symmetry = 2
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          26        19(2)   4(1)        0.1139486467       -0.0010405262        0.1611343557       -0.0014714042
+          29        19(2)   7(1)       -0.0824445771       -0.0032109527       -0.1165942391       -0.0045409728
+          31        19(2)   9(1)       -0.5840369644        0.0042453220       -0.8259529959        0.0060037919
+          32        19(2)  10(1)       -0.2050279379        0.0030480154       -0.2899532905        0.0043105447
+          41        26(3)  38(4)        0.2963114486       -0.0001922565        0.4190057143       -0.0002718646
+
+       43 elements with absolute value ≤ 8.26D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 2
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:   10 in symmetry 2  ( B1 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.86580434     au
+@                       23.559734     eV;   190022.09     cm-1;   2273.1689     kJ / mol
+
+@ Total energy :       -75.494199     au
+
+ Eigenvector for state no. 10
+
+     Response orbital operator symmetry = 2
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          20         4(1)  21(2)       -3.8469297211        8.0648479495       -0.0700681167        0.1468934314
+          21         4(1)  22(2)        3.1733190368       -6.9383193893        0.0577989474       -0.1263747996
+          25        19(2)   3(1)      -60.5559534092       -0.2843662911       -1.1149600456       -0.0052357701
+          45        27(3)  38(4)       -2.1625202356      -16.4447633381       -0.0436653628       -0.3320507922
+          46        27(3)  39(4)       -1.3502456553      -15.4479966258       -0.0272640068       -0.3119241921
+
+       43 elements with absolute value ≤ 1.11D-01 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 2
+     >> NO ELEMENTS <<
+
+
+ Time used in polarization propagator calculation is      4.66 CPU seconds for symmetry 2
+ ----------------------------------------------------------------
+ ----- Linear response calculation
+ ----- Symmetry of excitation/property operator(s)    4  ( A2 )
+ ----------------------------------------------------------------
+
+ Number of excitations of this symmetry           10
+ Number of response properties of this symmetry    0
+ Number of C6/C8 properties of this symmetry       0
+
+
+ Perturbation symmetry.     KSYMOP:           4
+ Perturbation spin symmetry.TRPLET:           T
+ Orbital variables.         KZWOPT:          40
+ Configuration variables.   KZCONF:           0
+ Total number of variables. KZVAR :          40
+
+ --- In RSPPP:
+ THCPP, MAXRM          1.00D-03      2000
+ KSYMOP,NGPPP(KSYMOP)         4         0
+ LWRK , LWRK1         319997533 307991533
+  KEXCNV,NSIM,LWRK2           10          10    12006261
+
+
+
+ --- EXCITATION ENERGIES AND TRANSITION MOMENT CALCULATION (MCTDHF) ---
+
+ Operator symmetry = 4  ( A2 ); triplet =   T
+
+           0  START configuration VECTORS USING LOWEST DIAGONAL HESSIAN ELEMENTS
+          10  START orbital VECTORS
+
+ ** RSPCTL MICROITERATION NUMBER    1
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.24711D-01  0.00D+00  1.25D-01  7.07D-01    3.16536D-01
+         2    2.47707D-01  0.00D+00  2.48D-01  7.07D-01    4.34649D-01
+         3    1.95405D-01  0.00D+00  1.95D-01  7.07D-01    4.59764D-01
+         4    5.63839D-02  0.00D+00  5.64D-02  7.07D-01    6.11458D-01
+         5    8.51742D-02  0.00D+00  8.52D-02  7.07D-01    6.22048D-01
+         6    4.29756D-02  0.00D+00  4.30D-02  7.07D-01    7.14221D-01
+         7    1.08790D-01  0.00D+00  1.09D-01  7.07D-01    7.81966D-01
+         8    6.09635D-02  0.00D+00  6.10D-02  7.07D-01    7.99128D-01
+         9    1.57961D-01  0.00D+00  1.58D-01  7.07D-01    8.75135D-01
+        10    6.13936D-02  0.00D+00  6.14D-02  7.07D-01    1.23051D+00
+
+ ** RSPCTL MICROITERATION NUMBER    2
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    6.10621D-03  0.00D+00  6.11D-03  9.18D-01    3.11869D-01
+         2    7.47805D-03  0.00D+00  7.48D-03  8.81D-01    4.15864D-01
+         3    4.82255D-03  0.00D+00  4.82D-03  8.16D-01    4.54685D-01
+         4    7.99829D-03  0.00D+00  8.00D-03  1.06D+00    6.09960D-01
+         5    2.89104D-02  0.00D+00  2.89D-02  1.73D+00    6.19096D-01
+         6    9.69264D-03  0.00D+00  9.69D-03  1.15D+00    7.13278D-01
+         7    7.86530D-03  0.00D+00  7.87D-03  8.43D-01    7.77082D-01
+         8    1.00233D-02  0.00D+00  1.00D-02  1.45D+00    7.96560D-01
+         9    8.37305D-03  0.00D+00  8.37D-03  7.29D-01    8.68404D-01
+        10    1.42603D-02  0.00D+00  1.43D-02  1.81D+00    1.22727D+00
+
+ ** RSPCTL MICROITERATION NUMBER    3
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    2.09104D-03  0.00D+00  2.09D-03  1.67D+00    3.11691D-01
+         2    2.06564D-03  0.00D+00  2.07D-03  1.59D+00    4.15716D-01
+         3    1.86088D-03  0.00D+00  1.86D-03  1.38D+00    4.54585D-01
+         4    1.28037D-03  0.00D+00  1.28D-03  1.54D+00    6.09889D-01
+         5    2.28363D-03  0.00D+00  2.28D-03  2.11D+00    6.19003D-01
+         6    8.07316D-03  0.00D+00  8.07D-03  4.13D+00    7.12561D-01
+         7    2.77030D-03  0.00D+00  2.77D-03  1.69D+00    7.76984D-01
+         8    6.68970D-03  0.00D+00  6.69D-03  3.71D+00    7.96170D-01
+         9    4.00337D-03  0.00D+00  4.00D-03  1.76D+00    8.68347D-01
+        10    1.70001D-01  0.00D+00  1.70D-01  6.08D+01    9.39879D-01
+
+ ** RSPCTL MICROITERATION NUMBER    4
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.59485D-05  0.00D+00  1.59D-05  1.68D+00    3.11690D-01
+         2    2.32283D-05  0.00D+00  2.32D-05  1.60D+00    4.15716D-01
+         3    2.53862D-05  0.00D+00  2.54D-05  1.39D+00    4.54584D-01
+         4    1.36797D-05  0.00D+00  1.37D-05  1.54D+00    6.09889D-01
+         5    2.80377D-05  0.00D+00  2.80D-05  2.11D+00    6.19002D-01
+         6    1.89584D-04  0.00D+00  1.90D-04  4.19D+00    7.12549D-01
+         7    6.93536D-05  0.00D+00  6.94D-05  1.71D+00    7.76983D-01
+         8    2.16542D-04  0.00D+00  2.17D-04  3.77D+00    7.96163D-01
+         9    8.12582D-05  0.00D+00  8.13D-05  1.83D+00    8.68344D-01
+        10    5.69118D-03  0.00D+00  5.69D-03  6.09D+01    9.35968D-01
+
+ *** THE REQUESTED   10 SOLUTION VECTORS CONVERGED
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:   78)
+ RSP solution vector no.    1; norm of residual   9.49D-06
+ RSP solution vector no.    2; norm of residual   1.45D-05
+ RSP solution vector no.    3; norm of residual   1.83D-05
+ RSP solution vector no.    4; norm of residual   8.87D-06
+ RSP solution vector no.    5; norm of residual   1.33D-05
+ RSP solution vector no.    6; norm of residual   4.53D-05
+ RSP solution vector no.    7; norm of residual   4.06D-05
+ RSP solution vector no.    8; norm of residual   5.75D-05
+ RSP solution vector no.    9; norm of residual   4.43D-05
+ RSP solution vector no.   10; norm of residual   9.35D-05
+
+ *** RSPCTL MICROITERATIONS CONVERGED
+
+
+ **************************************************************************************
+ *** @ Excit. operator sym 4 & ref. state sym 1 => excited state symmetry 4  ( A2 ) ***
+ **************************************************************************************
+
+
+
+ @ Excited state no:    1 in symmetry 4  ( A2 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.31168961     au
+@                       8.4815058     eV;   68407.962     cm-1;   818.34095     kJ / mol
+
+@ Total energy :       -76.048313     au
+
+ Eigenvector for state no.  1
+
+     Response orbital operator symmetry = 4
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          18        19(2)  27(3)       -0.2629956846        0.0066598506       -0.3718941518        0.0094174909
+          19        19(2)  28(3)        0.5998666946       -0.0015955449        0.8483396151       -0.0022564412
+          20        19(2)  29(3)        0.2231702506       -0.0038044585        0.3156103951       -0.0053803169
+          21        19(2)  30(3)        0.0712253180       -0.0016690565        0.1007278106       -0.0023604024
+          22        19(2)  31(3)       -0.0886368506       -0.0014316107       -0.1253514363       -0.0020246033
+          23        19(2)  32(3)       -0.0794448032        0.0037911106       -0.1123519182        0.0053614400
+
+       34 elements with absolute value ≤ 8.48D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 4
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    2 in symmetry 4  ( A2 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.41571554     au
+@                       11.312195     eV;   91239.014     cm-1;   1091.4610     kJ / mol
+
+@ Total energy :       -75.944287     au
+
+ Eigenvector for state no.  2
+
+     Response orbital operator symmetry = 4
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          18        19(2)  27(3)       -0.5070078077        0.0088841696       -0.7169442300        0.0125628325
+          19        19(2)  28(3)       -0.3568654124       -0.0012778102       -0.5046839062       -0.0018070965
+          20        19(2)  29(3)        0.1717433677       -0.0034564953        0.2428817999       -0.0048882225
+          21        19(2)  30(3)        0.1342599917       -0.0015837361        0.1898723011       -0.0022397411
+          22        19(2)  31(3)       -0.2011116324       -0.0017427132       -0.2844147981       -0.0024645686
+          23        19(2)  32(3)       -0.1435134031        0.0033982432       -0.2029586010        0.0048058416
+          24        19(2)  33(3)        0.0668340080       -0.0027380772        0.0945175605       -0.0038722259
+
+       33 elements with absolute value ≤ 7.17D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 4
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    3 in symmetry 4  ( A2 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.45458444     au
+@                       12.369872     eV;   99769.751     cm-1;   1193.5113     kJ / mol
+
+@ Total energy :       -75.905418     au
+
+ Eigenvector for state no.  3
+
+     Response orbital operator symmetry = 4
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          18        19(2)  27(3)       -0.2280305987        0.0002606715       -0.3224510935        0.0003686076
+          19        19(2)  28(3)        0.1127415683        0.0006808736        0.1594406550        0.0009629006
+          20        19(2)  29(3)       -0.6405780549        0.0016554423       -0.9059141730        0.0023411490
+          22        19(2)  31(3)       -0.1530078772        0.0006101950       -0.2163858151        0.0008629461
+
+       36 elements with absolute value ≤ 9.06D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 4
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    4 in symmetry 4  ( A2 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.60988861     au
+@                       16.595913     eV;   133855.08     cm-1;   1601.2623     kJ / mol
+
+@ Total energy :       -75.750114     au
+
+ Eigenvector for state no.  4
+
+     Response orbital operator symmetry = 4
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+           9         3(1)  38(4)       -0.1658745002        0.0010317410       -0.2345620859        0.0014589785
+          29        26(3)  20(2)       -0.6781291366        0.0019197007       -0.9589234051        0.0027145950
+          30        26(3)  21(2)        0.1033369912       -0.0026122869        0.1461259429       -0.0036939617
+
+       37 elements with absolute value ≤ 9.59D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 4
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    5 in symmetry 4  ( A2 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.61900169     au
+@                       16.843893     eV;   135855.17     cm-1;   1625.1887     kJ / mol
+
+@ Total energy :       -75.741001     au
+
+ Eigenvector for state no.  5
+
+     Response orbital operator symmetry = 4
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+           9         3(1)  38(4)       -0.6836855358        0.0018966722       -0.9667954098        0.0026820722
+          29        26(3)  20(2)        0.1670851104       -0.0002162765        0.2362703715       -0.0003058305
+
+       38 elements with absolute value ≤ 9.67D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 4
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    6 in symmetry 4  ( A2 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.71254937     au
+@                       19.389455     eV;   156386.51     cm-1;   1870.7981     kJ / mol
+
+@ Total energy :       -75.647453     au
+
+ Eigenvector for state no.  6
+
+     Response orbital operator symmetry = 4
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          21        19(2)  30(3)        0.6429674580       -0.0010465757        0.9092932993       -0.0014800815
+          22        19(2)  31(3)        0.2808848435       -0.0008323844        0.3972311551       -0.0011771694
+
+       38 elements with absolute value ≤ 9.09D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 4
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    7 in symmetry 4  ( A2 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.77698256     au
+@                       21.142771     eV;   170527.96     cm-1;   2039.9674     kJ / mol
+
+@ Total energy :       -75.583020     au
+
+ Eigenvector for state no.  7
+
+     Response orbital operator symmetry = 4
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          18        19(2)  27(3)        0.1149692283       -0.0064051624        0.1625744685       -0.0090573442
+          20        19(2)  29(3)        0.0727650073        0.0031904658        0.1029052602        0.0045120000
+          21        19(2)  30(3)        0.1954849179        0.0009764231        0.2764574221        0.0013808707
+          22        19(2)  31(3)       -0.4410127409        0.0023233175       -0.6236861993        0.0032856671
+          23        19(2)  32(3)        0.4435912295       -0.0043002894        0.6273327330       -0.0060815275
+          24        19(2)  33(3)       -0.0443639190        0.0025598859       -0.0627400559        0.0036202253
+          29        26(3)  20(2)       -0.0546851612       -0.0029577716       -0.0773287537       -0.0041825019
+          30        26(3)  21(2)       -0.2139365515        0.0042678609       -0.3025216812        0.0060350625
+
+       32 elements with absolute value ≤ 6.27D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 4
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    8 in symmetry 4  ( A2 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.79616321     au
+@                       21.664703     eV;   174737.63     cm-1;   2090.3262     kJ / mol
+
+@ Total energy :       -75.563840     au
+
+ Eigenvector for state no.  8
+
+     Response orbital operator symmetry = 4
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          22        19(2)  31(3)       -0.1384571895       -0.0002908935       -0.1958080351       -0.0004113855
+          23        19(2)  32(3)        0.1564871285        0.0011020115        0.2213062194        0.0015584796
+          29        26(3)  20(2)        0.0887624863        0.0001645850        0.1255165440        0.0002327350
+          30        26(3)  21(2)        0.6632446170       -0.0017524466        0.9378756231       -0.0024780856
+
+       36 elements with absolute value ≤ 9.38D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 4
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:    9 in symmetry 4  ( A2 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.86834421     au
+@                       23.628848     eV;   190579.52     cm-1;   2279.8374     kJ / mol
+
+@ Total energy :       -75.491659     au
+
+ Eigenvector for state no.  9
+
+     Response orbital operator symmetry = 4
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          18        19(2)  27(3)       -0.3044869557        0.0037102695       -0.4305656889        0.0052465787
+          21        19(2)  30(3)       -0.1421160655        0.0000163220       -0.2009824672        0.0000230828
+          22        19(2)  31(3)        0.3649115078       -0.0009142547        0.5160628033       -0.0012929514
+          23        19(2)  32(3)        0.4995211187       -0.0012241340        0.7064295408       -0.0017311870
+
+       36 elements with absolute value ≤ 7.06D-02 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 4
+     >> NO ELEMENTS <<
+
+
+ @ Excited state no:   10 in symmetry 4  ( A2 )
+ ----------------------------------------------
+
+@ Excitation energy :  0.93596774     au
+@                       25.468978     eV;   205421.17     cm-1;   2457.3829     kJ / mol
+
+@ Total energy :       -75.424035     au
+
+ Eigenvector for state no. 10
+
+     Response orbital operator symmetry = 4
+     (only scaled elements abs greater than   10.00 % of max abs value)
+
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          13         4(1)  38(4)       14.9898189038       16.4483966164        0.2730251020        0.2995916891
+          14         4(1)  39(4)        8.7592807330       15.5552519599        0.1595418551        0.2833239201
+          17        19(2)  26(3)      -52.4530588040       -7.4177971465       -1.0496633083       -0.1484410952
+
+       37 elements with absolute value ≤ 1.05D-01 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+     Configuration operator symmetry = 4
+     >> NO ELEMENTS <<
+
+
+ Time used in polarization propagator calculation is      4.61 CPU seconds for symmetry 4
+
+  Total CPU  time used in RESPONSE:  15.40 seconds
+  Total wall time used in RESPONSE:  15.38 seconds
+
+
+                   .-------------------------------------------.
+                   | End of Dynamic Property Section (RESPONS) |
+                   `-------------------------------------------'
+
+  Total CPU  time used in DALTON:  16.94 seconds
+  Total wall time used in DALTON:  16.94 seconds
+
+ 
+     Date and time (Linux)  : Fri Aug 10 08:38:01 2018
+     Host name              : s22p26.deic.sdu.dk                      

@@ -199,6 +199,10 @@ def Pick_CAS_threshold_electron_retrieval(occupied_threshold, electron_retrieval
                     counter_inactive += 1
         CAS[key-1] = counter_active
         inactive[key-1] = counter_inactive
+    if missing_electron == 0.0:
+        # If no electron is missing, then no occupied orbitals
+        # have been added, therefore no virtuel should be added
+        return CAS, inactive
     # Pick virtuel orbitals from here
     all_virtuel = []
     all_virtuel_sym = []
@@ -216,7 +220,6 @@ def Pick_CAS_threshold_electron_retrieval(occupied_threshold, electron_retrieval
         electron_retrieved += all_virtuel[index]
         electron_retrieved_percentage = 1 - abs(missing_electron - electron_retrieved)/missing_electron
         all_virtuel[index] = 0.0
-        print(all_virtuel_sym[index],electron_retrieved_percentage)
         if electron_retrieved_percentage > electron_retrieval:
             break
     return CAS, inactive
