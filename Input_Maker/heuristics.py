@@ -164,7 +164,7 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
     return RAS1, RAS2, RAS3, inactive, RAS2_electrons
 
 
-def Pick_CAS_threshold_electron_retrieval(occupied_threshold, electron_retrieval):
+def Pick_CAS_threshold_electron_retrieval(occupied_threshold, electron_retrieval, Natural_Occupations):
     """
     Heuristic to pick CAS.
     
@@ -210,12 +210,12 @@ def Pick_CAS_threshold_electron_retrieval(occupied_threshold, electron_retrieval
                 all_virtuel_sym.append(counter_symmetry)
         counter_symmetry += 1
     electron_retrieved = 0.0
-    for i in range(0, 1000):
+    for i in range(0, 30):
         # Pick the largest occupation and then zero it
         index = np.argmax(all_virtuel)
         CAS[all_virtuel_sym[index]] += 1
         electron_retrieved += all_virtuel[index]
-        electron_retrieved_percentage = (missing_electron - electron_retrieved)/missing_electron
+        electron_retrieved_percentage = 1 - abs(missing_electron - electron_retrieved)/missing_electron
         all_virtuel[index] = 0.0
         if electron_retrieved_percentage > electron_retrieval:
             break
