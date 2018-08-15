@@ -206,7 +206,7 @@ class Input_Maker():
                     self.__input_file.write(str(symms[i][j])+" ")
             self.__input_file.write("\n")
     
-    def write_input_file(self):
+    def write_input_file(self, check_values_only=False):
         """Check coherence in settings"""
         self.MCSCF_method = str(self.MCSCF_method).lower()
         self.wavefunction_type = str(self.wavefunction_type).lower()
@@ -228,6 +228,9 @@ class Input_Maker():
         """Print something useful"""
         print("Total molecular charge:", self.__total_nuclei_charge - self.__total_electrons)
         
+        if check_values_only == True:
+            return None
+
         """Write input file"""
         self.__input_file = open(self.file_name, "w+")
         self.__input_file.write("**DALTON INPUT"+"\n")
