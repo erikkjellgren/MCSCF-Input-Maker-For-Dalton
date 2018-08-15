@@ -56,13 +56,17 @@ class Input_Maker():
         self.max_micro = 24
         self.max_macro = 24
         self.symmetry_threshold = 10**-4
+        self.CI_threshold = 10**-5
+        self.max_CI_iterations = 40
+        self.enable_westa = False
         # MCSCFsrDFT stuff
         self.srxfunctional = "SRXPBEGWS"
         self.srcfunctional = "SRCPBEGWS"
         self.range_separation_parameter = 0.4
         # Response stuff
         self.response = "undifened"
-        
+        self.excitations_per_symmetry = [0]
+
         """Some internal variables"""
         self.reorder_neglect_threshold = 0.001
         self.get_nat_occ_neglect_threshold = 0.001
@@ -164,6 +168,8 @@ class Input_Maker():
         self.__input_file.write(" "+str(self.active_electrons)+"\n")
         self.__input_file.write(".SYMMETRY"+"\n")
         self.__input_file.write(" "+str(self.symmetry)+"\n")
+        self.__input_file.write(".SPIN MULT\n")
+        self.__input_file.write(" 1\n")
         
     def __write_reorder(self):
         symms = [[] for i in range(len(self.natural_occupations))]
@@ -232,9 +238,11 @@ class Input_Maker():
             self.__input_file.write("*CI INPUT"+"\n")
             self.__input_file.write(".CINO"+"\n")
             self.__input_file.write(".MAX ITERATIONS\n")
-            self.__input_file.write(" 100\n")
+            self.__input_file.write(" "+str(self.max_CI_iterations)+"\n")
             self.__input_file.write(".STATE"+"\n")
             self.__input_file.write(" "+str(self.state)+"\n")
+            self.__input_file.write(".THRESH\n")
+            self.__input_file.write(" "+str(self.CI_threshold)+"\n")
             
             self.__write_active_space()
             
@@ -246,15 +254,13 @@ class Input_Maker():
             
             self.__input_file.write("*OPTIMIZATION"+"\n")
             self.__input_file.write(".DETERMI"+"\n")
-            self.__input_file.write(".MAX MICRO ITERATIONS\n")
-            self.__input_file.write(" "+str(self.max_micro)+"\n")
-            self.__input_file.write(".MAX MACRO ITERATIONS\n")
-            self.__input_file.write(" "+str(self.max_macro)+"\n")
             
         
         """Write MCSCF"""
         if self.wavefunction_type == "mcscf":
             self.__input_file.write("**WAVEFUNCTION"+"\n")
+            if self.enable_westa == True:
+                self.__input_file.write(".WESTA\n")
             self.__input_file.write(".MCSCF\n")
             
             self.__write_active_space()
@@ -305,26 +311,18 @@ class Input_Maker():
         """Write singlet excitation response"""
         if self.response == "excitation" or self.response == "excitation_tda":
             self.__input_file.write("**RESPONSE\n")
+            self.__input_file.write(".MAXRM\n")
+            self.__input_file.write(" 8000\n")
             if self.response == "excitation_tda":
                 self.__input_file.write(".TDA\n")
             self.__input_file.write("*LINEAR\n")
+            self.__input_file.write(".MAX ITERATIONS\n")
+            self.__input_file.write(" 100\n")
             self.__input_file.write(".SINGLE RESIDUE\n")
             self.__input_file.write(".ROOTS\n")
-            for i in range(self.__number_symmetreis):
-                self.__input_file.write(" 3")
+            for i in self.excitations_per_symmetry:
+                self.__input_file.write(" "+str(i))
             self.__input_file.write("\n")
-            
-            self.__input_file.write(".NSTART\n")
-            for i in range(self.__number_symmetreis):
-                self.__input_file.write(" 10")
-            self.__input_file.write("\n")
-            
-            self.__input_file.write(".NSIMUL\n")
-            for i in range(self.__number_symmetreis):
-                self.__input_file.write(" 6")
-            self.__input_file.write("\n")
-            self.__input_file.write(".PRINT\n")
-            self.__input_file.write(" 4\n")
             
             
         self.__input_file.write("**END OF DALTON INPUT"+"\n")
