@@ -15,7 +15,7 @@ def threshold_scan_all(natural_occupations):
             print("   {0:.4f}      {1:.4f}            {2:2d}                 {3:.4f}".format(i, 2-i, orbital_counter, latests_threshold - (2-i)))
             latests_threshold = 2-i
             orbital_counter += 1
-            if orbital_counter == 17:
+            if orbital_counter == 21:
                 break
         elif i != 2.0 and i > 1.0:
             print("   {0:.4f}      {1:.4f}            {2:2d}".format(i, 2-i, orbital_counter))
@@ -32,7 +32,7 @@ def threshold_scan_symmetries(natural_occupations):
             if i != 2.0 and i > 1.0:
                 print("Threshold: {0:.4f} gives: {1:2d} occupied-active orbitals".format(2-i, orbital_counter))
                 orbital_counter += 1
-                if orbital_counter == 17:
+                if orbital_counter == 21:
                     break
 
 

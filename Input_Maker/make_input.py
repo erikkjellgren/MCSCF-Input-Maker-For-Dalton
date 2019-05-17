@@ -100,7 +100,7 @@ class Input_Maker():
         """
         self.RAS1, self.RAS2, self.RAS3, self.inactive, self.active_electrons_in_RAS2 = heu.Pick_RASCI_number_occupied(number_occupied, self.natural_occupations, excitation=excitation_from_to)
         
-    def pick_CAS_occupied_threshold_electron_retrieval(self, occ_threshold, retrieval_electron=0.9):
+    def pick_CAS_occupied_threshold_electron_retrieval(self, occ_threshold, retrieval_electron=0.9, print_electron_retrieval=False):
         """
         Function pick CAS based on a threshold for occupied, and an
         electron retrieval percentage for virtuel.
@@ -108,7 +108,7 @@ class Input_Maker():
         occ_threshold is choosen such that all occupied with an 
         occupation below the threshold will be included.
         """
-        self.CAS, self.inactive = heu.Pick_CAS_threshold_electron_retrieval(occupied_threshold=occ_threshold, electron_retrieval=retrieval_electron, Natural_Occupations=self.natural_occupations, number_of_symmetries=self.__number_symmetreis)
+        self.CAS, self.inactive = heu.Pick_CAS_threshold_electron_retrieval(occupied_threshold=occ_threshold, electron_retrieval=retrieval_electron, Natural_Occupations=self.natural_occupations, number_of_symmetries=self.__number_symmetreis, print_retrieved_electron=print_electron_retrieval)
         
     def scan_threshold_all(self):
         anal.threshold_scan_all(self.natural_occupations)
