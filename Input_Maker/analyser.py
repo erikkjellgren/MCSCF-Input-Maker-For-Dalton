@@ -9,16 +9,26 @@ def threshold_scan_all(natural_occupations):
     all_orbitals = np.sort(all_orbital)
     orbital_counter = 1
     latests_threshold = 0
-    print("Occupation    Threshold    Occ-active orb.    Change in threshold")
+    weakly_occupied = []
     for i in all_orbitals:
+        if i < 1.0:
+            weakly_occupied.append(i)
+    weakly_occupied = np.array(weakly_occupied)
+    weakly_occupied = np.sort(weakly_occupied)[::-1]
+    print("Occupation     Correlating    Threshold    Occ-active orb.    Change in threshold")
+    for i in all_orbitals:
+        if len(weakly_occupied) >= orbital_counter:
+            weak_occ = weakly_occupied[orbital_counter-1]
+        else:
+            weak_occ = 0
         if i != 2.0 and i > 1.0 and latests_threshold != 0:
-            print("   {0:.4f}      {1:.4f}            {2:2d}                 {3:.4f}".format(i, 2-i, orbital_counter, latests_threshold - (2-i)))
+            print("   {0:.4f}        {1:.4f}        {2:.4f}           {3:2d}                 {4:.4f}".format(i, weak_occ, 2-i, orbital_counter, latests_threshold - (2-i)))
             latests_threshold = 2-i
             orbital_counter += 1
             if orbital_counter == 21:
                 break
         elif i != 2.0 and i > 1.0:
-            print("   {0:.4f}      {1:.4f}            {2:2d}".format(i, 2-i, orbital_counter))
+            print("   {0:.4f}        {1:.4f}        {2:.4f}           {3:2d}".format(i, weak_occ, 2-i, orbital_counter))
             latests_threshold = 2-i
             orbital_counter += 1
     
