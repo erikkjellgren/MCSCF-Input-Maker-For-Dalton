@@ -59,6 +59,18 @@ def Relative_Natural_Occupations(Natural_Occupations):
     return relative_occupied, relative_virtuel
     
     
+def zero_fill_metal_d_orbitals(metal_d_orbitals, Natural_Occupations):
+    metal_d_orbitals_new = {}
+    for key in Natural_Occupations:
+        d_orbitals = np.zeros((len(Natural_Occupations[key]),6))
+        for i in range(len(Natural_Occupations[key])):
+            # d_orbitals count from zero, be aware of this!
+            d_orbitals[i,0] = i+1
+        for i in range(len(metal_d_orbitals[key])):
+            if int(metal_d_orbitals[key][i,0])-1 < len(Natural_Occupations[key]):
+                d_orbitals[int(metal_d_orbitals[key][i,0])-1] = metal_d_orbitals[key][i,:]
+        metal_d_orbitals_new[key] = d_orbitals
+    return metal_d_orbitals_new
     
     
     

@@ -3,6 +3,7 @@ from Input_Maker import utility as util
 from Input_Maker import analyser as anal
 from Input_Maker import heuristics as heu
 
+import copy
 import numpy as np
 
 class Input_Maker():
@@ -17,25 +18,33 @@ class Input_Maker():
         self.__orbitals_in_symmetries = fload.orbital_symmetries(self.__load_file)
         self.__number_symmetreis = len(self.__orbitals_in_symmetries)
         self.__total_nuclei_charge = fload.total_nuclei_charge(self.__load_file)
+        self.metal_d_orbitals = fload.metal_d_orbitals(self.__load_file)
         
         if self.__type_wavefunction == "ci": # Not MP2 wavefunction
             self.natural_occupations = fload.Natural_Occupations_CI(self.__load_file, self.__number_symmetreis)
             self.__total_electrons = fload.electrons(self.__load_file)
-        
         elif self.__type_wavefunction == "mp2":
             self.number_closed_shell = fload.closed_shell_number(self.__load_file)
             self.Hartree_Fock_orbital_energies = fload.HF_orb_energies(self.__load_file, self.__number_symmetreis)
             self.__total_electrons = fload.electronsMP2(self.__load_file)
-            self.natural_occupations = fload.Natural_Occupations_MP2(self.__load_file, self.__number_symmetreis)
-        
+            self.natural_occupations = fload.Natural_Occupations_MP2(self.__load_file, self.__number_symmetreis) 
+        elif self.__type_wavefunction == "hf" or self.__type_wavefunction == "hf-srdft":
+            self.number_closed_shell = fload.closed_shell_number_hf(self.__load_file)
+            self.__total_electrons = fload.electrons(self.__load_file)
+            self.Hartree_Fock_orbital_energies = fload.HF_orb_energies_hf_wf(self.__load_file, self.__number_symmetreis)  
         else:
             self.natural_occupations = fload.Natural_Occupations(self.__load_file, self.__number_symmetreis)
             self.__total_electrons = fload.electrons(self.__load_file)
         
-            
-        self.natural_occupation_sum = util.Natural_Occupation_Summation(self.natural_occupations)
-        self.natural_occupations, self.natural_occupations_index = util.Sort_Natural_Occupations(self.natural_occupations)
-        self.relative_natural_occupations_occupied, self.relative_natural_occupations_virtuel = util.Relative_Natural_Occupations(self.natural_occupations)
+        if self.__type_wavefunction == "hf" or self.__type_wavefunction == "hf-srdft":
+            self.metal_d_orbitals = util.zero_fill_metal_d_orbitals(self.metal_d_orbitals, self.Hartree_Fock_orbital_energies)
+        else:
+            self.metal_d_orbitals = util.zero_fill_metal_d_orbitals(self.metal_d_orbitals, self.natural_occupations)
+            self.natural_occupation_sum = util.Natural_Occupation_Summation(self.natural_occupations)
+            self.natural_occupations_unsorted = copy.deepcopy(self.natural_occupations)
+            self.natural_occupations, self.natural_occupations_index = util.Sort_Natural_Occupations(self.natural_occupations)
+            self.relative_natural_occupations_occupied, self.relative_natural_occupations_virtuel = util.Relative_Natural_Occupations(self.natural_occupations)
+         
         
         """Set variables for input files"""
         self.inactive = np.zeros(self.__number_symmetreis, dtype=int)
@@ -79,6 +88,7 @@ class Input_Maker():
     def pick_CAS_by_active_threshold(self, threshold):
         self.CAS, self.inactive = heu.Pick_CAS_active_threshold(threshold, self.natural_occupations)
         
+		
     def pick_CAS_by_number_occupied(self, number_occupied, allow_more_virtuel=False):
         """
         Function to pick CAS space based on number of wanted occupied active orbitals.
@@ -92,14 +102,16 @@ class Input_Maker():
         """
         self.CAS, self.inactive = heu.Pick_CAS_number_occupied(number_occupied, self.natural_occupations, allow_more_virt=allow_more_virtuel)
         
-    def pick_RASCISD_by_number_occupied(self, number_occupied, excitation_from_to=[0,0]):
+		
+    def pick_RASCISD_by_number_occupied(self, number_occupied, excitation_from_to=[0,0], max_virtuel=3000):
         """
         Function to pick RASCISD based on number of wanted active occupied orbitals.
         
         Orbitals with occupation number == 2 will never be added.
         """
-        self.RAS1, self.RAS2, self.RAS3, self.inactive, self.active_electrons_in_RAS2 = heu.Pick_RASCI_number_occupied(number_occupied, self.natural_occupations, excitation=excitation_from_to)
+        self.RAS1, self.RAS2, self.RAS3, self.inactive, self.active_electrons_in_RAS2 = heu.Pick_RASCI_number_occupied(number_occupied, self.natural_occupations, max_virtuel, excitation=excitation_from_to)
         
+		
     def pick_CAS_occupied_threshold_electron_retrieval(self, occ_threshold, retrieval_electron=0.9, print_electron_retrieval=False):
         """
         Function pick CAS based on a threshold for occupied, and an
@@ -110,6 +122,7 @@ class Input_Maker():
         """
         self.CAS, self.inactive = heu.Pick_CAS_threshold_electron_retrieval(occupied_threshold=occ_threshold, electron_retrieval=retrieval_electron, Natural_Occupations=self.natural_occupations, number_of_symmetries=self.__number_symmetreis, print_retrieved_electron=print_electron_retrieval)
         
+		
     def scan_threshold_all(self):
         anal.threshold_scan_all(self.natural_occupations)
         
@@ -135,7 +148,15 @@ class Input_Maker():
         
     def get_relative_natural_occupations(self, show_virtuel_occupations=True):
         anal.print_relative_natural_occ(self.relative_natural_occupations_occupied, self.relative_natural_occupations_virtuel, self.natural_occupations, self.get_nat_occ_neglect_threshold, show_virtuel=show_virtuel_occupations)
-        
+    
+    
+    def get_metal_d_orbitals(self, number_occ=16, number_unocc=16):
+        if self.__type_wavefunction == "hf" or self.__type_wavefunction == "hf-srdft":
+            anal.print_metal_d_orbitals_hf(self.Hartree_Fock_orbital_energies, self.metal_d_orbitals, self.number_closed_shell, number_occ, number_unocc)
+        else:
+            anal.print_metal_d_orbitals(self.natural_occupations_unsorted, self.metal_d_orbitals, number_occ, number_unocc)
+    
+		
     def __write_active_space(self):
         self.__input_file.write("*CONFIGURATION INPUT"+"\n")
         self.__input_file.write(".INACTIVE"+"\n")

@@ -107,8 +107,88 @@ def print_relative_natural_occ(relative_natural_occupied, relative_natural_virtu
                 print("{0:.4f}   ".format(relative_natural_virtuel[key][i]),end="")
                 
     
+def print_metal_d_orbitals(natural_occupations_unsorted, d_orb, number_occ, number_unocc):
+    metal_d_orbitals = []
+    for key in natural_occupations_unsorted:
+        for i,nat_occ in enumerate(natural_occupations_unsorted[key]):
+            metal_d_orbitals.append([nat_occ,d_orb[key][i,0],key,d_orb[key][i,1],d_orb[key][i,2],d_orb[key][i,3],d_orb[key][i,4],d_orb[key][i,5]])
+    metal_d_orbitals = np.array(metal_d_orbitals)
+    d_orb_idx = np.argsort(metal_d_orbitals[:,0])[::-1]
+    occ_idx = d_orb_idx[metal_d_orbitals[d_orb_idx,0]>1.0][::-1]
+    unocc_idx = d_orb_idx[metal_d_orbitals[d_orb_idx,0]<1.0]
+    occ_d_orbitals = metal_d_orbitals[occ_idx]
+    unocc_d_orbitals = metal_d_orbitals[unocc_idx]
+    a = 12
+    print("Nat. Occ.".ljust(a)+"Orb. #".ljust(a)+"Sym. #".ljust(a)+"dxy/d2-".ljust(a)+"dyz/d1-".ljust(a)+"dzz/d0".ljust(a)+"dxz/d1+".ljust(a)+"dxx-yy/d2+".ljust(a)+"total d")
+    for i in range(0, number_occ):
+        natocc = occ_d_orbitals[i,0]
+        orb = occ_d_orbitals[i,1]
+        sym = occ_d_orbitals[i,2]
+        dxy = occ_d_orbitals[i,3]
+        dyz = occ_d_orbitals[i,4]
+        dzz = occ_d_orbitals[i,5]
+        dxz = occ_d_orbitals[i,6]
+        dxxyy = occ_d_orbitals[i,7]
+        total_d = dxy+dyz+dzz+dxz+dxxyy
+        print("{0: 0.2f}".format(natocc).ljust(a)+str(int(orb)).ljust(a)+str(int(sym)).ljust(a)+"{0: 0.2f}".format(dxy).ljust(a)+"{0: 0.2f}".format(dyz).ljust(a)+"{0: 0.2f}".format(dzz).ljust(a)+"{0: 0.2f}".format(dxz).ljust(a)+"{0: 0.2f}".format(dxxyy).ljust(a)+"{0: 0.2f}".format(total_d))
+    print("======================================================================================================")
+    for i in range(0, number_unocc):
+        natocc = unocc_d_orbitals[i,0]
+        orb = unocc_d_orbitals[i,1]
+        sym = unocc_d_orbitals[i,2]
+        dxy = unocc_d_orbitals[i,3]
+        dyz = unocc_d_orbitals[i,4]
+        dzz = unocc_d_orbitals[i,5]
+        dxz = unocc_d_orbitals[i,6]
+        dxxyy = unocc_d_orbitals[i,7]
+        total_d = dxy+dyz+dzz+dxz+dxxyy
+        print("{0: 0.2f}".format(natocc).ljust(a)+str(int(orb)).ljust(a)+str(int(sym)).ljust(a)+"{0: 0.2f}".format(dxy).ljust(a)+"{0: 0.2f}".format(dyz).ljust(a)+"{0: 0.2f}".format(dzz).ljust(a)+"{0: 0.2f}".format(dxz).ljust(a)+"{0: 0.2f}".format(dxxyy).ljust(a)+"{0: 0.2f}".format(total_d))
 
 
+def print_metal_d_orbitals_hf(hf_orb_energies, d_orb, number_closed_shells, number_occ, number_unocc):
+    metal_d_orbitals_occ = []
+    metal_d_orbitals_unocc = []
+    counter = 0
+    for key in hf_orb_energies:
+        for i in range(0, int(number_closed_shells[counter])):
+            metal_d_orbitals_occ.append([hf_orb_energies[key][i],d_orb[key][i,0],key,d_orb[key][i,1],d_orb[key][i,2],d_orb[key][i,3],d_orb[key][i,4],d_orb[key][i,5]])
+        counter += 1
+    counter = 0
+    for key in hf_orb_energies:
+        for i in range(int(number_closed_shells[counter]), len(hf_orb_energies[key])):
+            metal_d_orbitals_unocc.append([hf_orb_energies[key][i],d_orb[key][i,0],key,d_orb[key][i,1],d_orb[key][i,2],d_orb[key][i,3],d_orb[key][i,4],d_orb[key][i,5]])
+        counter += 1
+    metal_d_orbitals_occ = np.array(metal_d_orbitals_occ)
+    metal_d_orbitals_unocc = np.array(metal_d_orbitals_unocc)
+    occ_idx = np.argsort(metal_d_orbitals_occ[:,0])[::-1]
+    unocc_idx = np.argsort(metal_d_orbitals_unocc[:,0])
+    occ_d_orbitals = metal_d_orbitals_occ[occ_idx]
+    unocc_d_orbitals = metal_d_orbitals_unocc[unocc_idx]
+    a = 12
+    print("Orb. en.".ljust(a)+"Orb. #".ljust(a)+"Sym. #".ljust(a)+"dxy/d2-".ljust(a)+"dyz/d1-".ljust(a)+"dzz/d0".ljust(a)+"dxz/d1+".ljust(a)+"dxx-yy/d2+".ljust(a)+"total d")
+    for i in range(0, number_occ):
+        orb_en = occ_d_orbitals[i,0]
+        orb = occ_d_orbitals[i,1]
+        sym = occ_d_orbitals[i,2]
+        dxy = occ_d_orbitals[i,3]
+        dyz = occ_d_orbitals[i,4]
+        dzz = occ_d_orbitals[i,5]
+        dxz = occ_d_orbitals[i,6]
+        dxxyy = occ_d_orbitals[i,7]
+        total_d = dxy+dyz+dzz+dxz+dxxyy
+        print("{0: 0.2E}".format(orb_en).ljust(a)+str(int(orb)).ljust(a)+str(int(sym)).ljust(a)+"{0: 0.2f}".format(dxy).ljust(a)+"{0: 0.2f}".format(dyz).ljust(a)+"{0: 0.2f}".format(dzz).ljust(a)+"{0: 0.2f}".format(dxz).ljust(a)+"{0: 0.2f}".format(dxxyy).ljust(a)+"{0: 0.2f}".format(total_d))
+    print("======================================================================================================")
+    for i in range(0, number_unocc):
+        orb_en = unocc_d_orbitals[i,0]
+        orb = unocc_d_orbitals[i,1]
+        sym = unocc_d_orbitals[i,2]
+        dxy = unocc_d_orbitals[i,3]
+        dyz = unocc_d_orbitals[i,4]
+        dzz = unocc_d_orbitals[i,5]
+        dxz = unocc_d_orbitals[i,6]
+        dxxyy = unocc_d_orbitals[i,7]
+        total_d = dxy+dyz+dzz+dxz+dxxyy
+        print("{0: 0.2E}".format(orb_en).ljust(a)+str(int(orb)).ljust(a)+str(int(sym)).ljust(a)+"{0: 0.2f}".format(dxy).ljust(a)+"{0: 0.2f}".format(dyz).ljust(a)+"{0: 0.2f}".format(dzz).ljust(a)+"{0: 0.2f}".format(dxz).ljust(a)+"{0: 0.2f}".format(dxxyy).ljust(a)+"{0: 0.2f}".format(total_d))
 
 
 

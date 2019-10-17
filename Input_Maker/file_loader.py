@@ -31,6 +31,7 @@ def total_nuclei_charge(load_file):
                     break
     return charge
 
+
 def orbital_symmetries(load_file):
     orbital_symmetries = np.zeros(20)
     for i in load_file:
@@ -57,6 +58,19 @@ def closed_shell_number(load_file):
                 if j != '':
                     closed_shells[counter] = int(j)
                     counter += 1
+            break
+    return closed_shells[0:counter]
+    
+    
+def closed_shell_number_hf(load_file):
+    closed_shells = np.zeros(9)
+    for line in load_file:
+        if "Orbital occupations :" in line:
+            data = line.split()
+            counter = 0
+            for j in range(3, len(data)):
+                closed_shells[counter] = int(data[j])
+                counter += 1
             break
     return closed_shells[0:counter]
     
@@ -127,8 +141,32 @@ def HF_orb_energies(load_file, number_symmetries):
             energies_string = '' # Reset
             current_symmetry += 1 # Go to next symmetry
         if current_symmetry  == number_symmetries+1:
-            break
-            
+            break         
+    return HF_energies
+    
+    
+def HF_orb_energies_hf_wf(load_file, number_symmetries):
+    HF_energies = {}
+    get_energies_check = False # Check when HF energies are found
+    current_symmetry = 0
+    for line in load_file:
+        if " E(LUMO)" in line:
+            HF_energies[current_symmetry] = np.array(energies)
+            break   
+        if "Hartree-Fock orbital energies" in line:
+            get_energies_check = True
+        elif len(line) > 10 and get_energies_check:
+            orb_energies = line.split()
+            if len(orb_energies) == 7:
+                if current_symmetry != 0:
+                    HF_energies[current_symmetry] = np.array(energies)
+                energies = []
+                current_symmetry += 1 # Go to next symmetry
+                for i in range(2, 7):
+                    energies.append(float(orb_energies[i]))
+            else:
+                for en in orb_energies:
+                    energies.append(float(en))
     return HF_energies
     
 
@@ -240,3 +278,43 @@ def Natural_Occupations_CI(load_file, number_symmetries):
             if current_symmetry  == number_symmetries+1:
                 break
     return Natural_Occupations
+	
+	
+def metal_d_orbitals(load_file):
+    metals = ["Sc","Ti","V" ,"Cr","Mn","Fe","Co","Ni","Cu","Zn",
+              "Y", "Zr","Nb","Mo","Tc","Ru","Rh","Pd","Ag","Cd",
+              "Lu","Hf","Ta","W", "Re","Os","Ir","Pt","Au","Hg",
+              "Lr","Rf","Db","Sg","Bh","Hs","Mt","Ds","Rg","Cn"]
+    orbital_check = False
+    metal_d_orbitals = {}
+    symmetry_counter = 0
+    for line in load_file:
+        if "Molecular orbitals for symmetry species" in line:
+            symmetry_counter += 1
+            metal_d_orbitals[symmetry_counter] = []
+        if "    Orbital    " in line and not "":
+            orbital_check = True
+            # Orbital_number, d1, d2, d3, d4, d5, d_total, total
+            orbitals = np.zeros((len(line.split())-1,6))
+            for i in range(1, len(line.split())):
+                orbitals[i-1,0] = float(line.split()[i])
+        elif orbital_check and line == "\n":
+            orbital_check = False
+            if metal_d_orbitals[symmetry_counter] == []:
+                metal_d_orbitals[symmetry_counter] = orbitals
+            else:
+                metal_d_orbitals[symmetry_counter] = np.vstack((metal_d_orbitals[symmetry_counter], orbitals))
+        elif orbital_check:
+            line_list = line.split()
+            for i in range(3, len(line_list)):
+                if line_list[1] in metals and line_list[2] == ":3d2-":
+                    orbitals[i-3,1] += abs(float(line_list[i]))
+                elif line_list[1] in metals and line_list[2] == ":3d1-":
+                    orbitals[i-3,2] += abs(float(line_list[i]))
+                elif line_list[1] in metals and line_list[2] == ":3d0":
+                    orbitals[i-3,3] += abs(float(line_list[i]))
+                elif line_list[1] in metals and line_list[2] == ":3d1+":
+                    orbitals[i-3,4] += abs(float(line_list[i]))
+                elif line_list[1] in metals and line_list[2] == ":3d2+":
+                    orbitals[i-3,5] += abs(float(line_list[i]))
+    return metal_d_orbitals

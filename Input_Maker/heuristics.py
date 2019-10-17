@@ -102,7 +102,7 @@ def Pick_CAS_number_occupied(number_occ, Natural_Occupations, allow_more_virt=Fa
     return CAS, inactive
 
 
-def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determinant_limt=7*10**6, excitation=[0,0]):
+def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, max_virtuel, excitation=[0,0]):
     """
     Function to pick a RAS-CI active based on number number of 
       occupied orbitals wanted. 
@@ -144,16 +144,25 @@ def Pick_RASCI_number_occupied(number_occ, Natural_Occupations, approx_determina
         if picked_occ[i,1] != 2:
             RAS1[idx] += 1
             inactive[idx] -= 1
+            
     for key in Natural_Occupations:
-        for i in Natural_Occupations[key]:
-            if i < 1.0:
-                if np.sum(RAS3)*2+2 - np.sum(RAS1)*2 > 1:
-                    if binom(np.sum(RAS1)*2,2)*binom(np.sum(RAS3)*2+2 - np.sum(RAS1)*2,2) < approx_determinant_limt:
-                        RAS3[key-1] += 1
-                    else:
-                        break
-                else:
-                    RAS3[key-1] += 1
+        nat_occ_temp = np.zeros((len(Natural_Occupations[key]),2))
+        nat_occ_temp[:,0] = Natural_Occupations[key]
+        nat_occ_temp[:,1] = key
+        if key == 1:
+            nat_occ_all = nat_occ_temp
+        else:
+            nat_occ_all = np.vstack((nat_occ_all, nat_occ_temp))
+    idx = np.argsort(nat_occ_all[:,0])[::-1]
+    nat_occ_all[:,0] = nat_occ_all[idx,0]
+    nat_occ_all[:,1] = nat_occ_all[idx,1]
+    for i in range(0, len(nat_occ_all)):
+        if np.sum(RAS3) == max_virtuel:
+            break
+        nat_occ = nat_occ_all[i,0]
+        symmetry = nat_occ_all[i,1]
+        if nat_occ < 1:
+            RAS3[int(symmetry)-1] += 1
     if excitation != [0,0]:
         if RAS1[excitation[0]-1] != 0 and RAS3[excitation[1]-1] != 0:
             RAS1[excitation[0]-1] -= 1
