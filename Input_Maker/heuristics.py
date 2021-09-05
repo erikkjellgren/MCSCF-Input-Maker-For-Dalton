@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.special import binom
 
 
 def Pick_RAS_active_threshold(threshold, Natural_Occupations):
